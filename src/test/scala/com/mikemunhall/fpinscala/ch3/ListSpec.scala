@@ -47,5 +47,24 @@ class ListSpec extends Specification {
         List.dropWhile[Any](Nil, _ => false) === Nil
       }
     }
+
+    "init" >> {
+      "remove the last item in a list" >> {
+        List.init(List("a", "b")) === List("a")
+        List.init(List("a", "b", "c")) === List("a", "b")
+        List.init(List("a")) === Nil
+      }
+
+      "throw an exception when invoked with an empty list" >> {
+        List.init(Nil) must throwA("Empty list")
+      }
+    }
+
+    "foldRight" >> {
+      "fold all elements left to right" >> {
+        List.foldRight(List(1, 2, 3), 0)(_ + _) === 6
+        List.foldRight(List(1, 2, 3), 1)(_ * _) === 6
+      }
+    }
   }
 }

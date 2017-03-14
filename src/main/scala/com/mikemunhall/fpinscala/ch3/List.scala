@@ -41,4 +41,26 @@ object List {
     case Cons(h, t) if f(h) => dropWhile(t, f)
     case _ => l
   }
+
+  def append[A](a1: List[A], a2: List[A]): List[A] = a1 match {
+    case Nil => a2
+    case Cons(h, t) => Cons(h, append(t, a2))
+  }
+
+  def init[A](l: List[A]): List[A] = {
+
+    @annotation.tailrec
+    def go(acc: List[A], current: List[A]): List[A] = current match {
+      case Nil => throw new Exception("Empty list")
+      case Cons(_, Nil) => acc
+      case Cons(h, t) => go(append(acc, List(h)), t)
+    }
+
+    go(Nil, l)
+  }
+
+  def foldRight[A, B](xs: List[A], z: B)(f: (A, B) => B): B = xs match {
+    case Nil => z
+    case Cons(h, t) => f(h, foldRight(t, z)(f))
+  }
 }
