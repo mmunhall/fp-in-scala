@@ -105,5 +105,11 @@ class ListSpec extends Specification {
         List.lengthL(List(3, 4, 5)) === 3
       }
     }
+
+    "reverse" >> {
+      "return a list in reverse in order" >> {
+        List.reverse(List(1, 2, 3)) === List(3, 2, 1)
+      }
+    }
   }
 }
