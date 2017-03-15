@@ -64,7 +64,6 @@ object List {
     go(Nil, l)
   }
 
-
   def foldRight[A, B](xs: List[A], z: B)(f: (A, B) => B): B = xs match {
     case Nil => z
     case Cons(h, t) => f(h, foldRight(t, z)(f))
@@ -72,5 +71,23 @@ object List {
 
   // Exercise 3.9
   def length[A](as: List[A]): Int = foldRight(as, 0)((_, acc) => acc + 1)
+
+  // Exercise 3.10
+  @annotation.tailrec
+  def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = as match {
+    case Nil => z
+    case Cons(h, t) => foldLeft(t, f(z, h))(f)
+  }
+
+  // Exercise 3.11 - 1/3
+  def sumL(as: List[Int]) = foldLeft(as, 0)(_ + _)
+
+  // Exercise 3.11 - 2/3
+  def productL(as: List[Double]) = foldLeft(as, 1.0)(_ * _)
+
+  // Exercise 3.11 - 3/3
+  def lengthL[A](as: List[A]) = foldLeft(as, 0)((acc, a) => acc + 1)
+
+
 
 }
