@@ -21,22 +21,26 @@ object List {
     else Cons(as.head, apply(as.tail: _*))
   }
 
+  // Exercise 3.2
   def tail[A](as: List[A]): List[A] = as match {
     case Nil => throw new Exception("Empty list")
     case Cons(_, t) => t
   }
 
+  // Exercise 3.3
   def setHead[A](as: List[A], h: A): List[A] = as match {
     case Nil => throw new Exception("Empty list")
     case Cons(_, t) => Cons(h, t)
   }
 
+  // Exercise 3.4
   def drop[A](l: List[A], n: Int): List[A] = (l, n) match {
     case (l, n) if n == 0 => l
     case (Nil, _) => l
     case (Cons(_, t), n) => drop(t, n - 1)
   }
 
+  // Exercise 3.5
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
     case Cons(h, t) if f(h) => dropWhile(t, f)
     case _ => l
@@ -47,6 +51,7 @@ object List {
     case Cons(h, t) => Cons(h, append(t, a2))
   }
 
+  // Exercise 3.6
   def init[A](l: List[A]): List[A] = {
 
     @annotation.tailrec
@@ -59,8 +64,13 @@ object List {
     go(Nil, l)
   }
 
+
   def foldRight[A, B](xs: List[A], z: B)(f: (A, B) => B): B = xs match {
     case Nil => z
     case Cons(h, t) => f(h, foldRight(t, z)(f))
   }
+
+  // Exercise 3.9
+  def length[A](as: List[A]): Int = foldRight(as, 0)((_, acc) => acc + 1)
+
 }

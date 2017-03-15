@@ -65,6 +65,20 @@ class ListSpec extends Specification {
         List.foldRight(List(1, 2, 3), 0)(_ + _) === 6
         List.foldRight(List(1, 2, 3), 1)(_ * _) === 6
       }
+
+      // Exercise 3.8
+      "reconstructor?" >> {
+        List.foldRight(List(1, 2, 3), Nil: List[Int])(Cons(_, _)) === List(1, 2, 3)
+      }
+    }
+
+    "length" >> {
+      "calculates the length of a list" >> {
+        List.length(Nil) === 0
+        List.length(List(1)) === 1
+        List.length(List(1, 2)) === 2
+        List.length(List(1, 2, 3)) === 3
+      }
     }
   }
 }
