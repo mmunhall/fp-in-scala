@@ -102,7 +102,7 @@ object List {
   // Exercise 3.14
   def appendR[A](a1: List[A], a2: List[A]): List[A] = foldRight(a1, a2)(Cons(_, _))
 
-  // Exercise 3.15
+  // Exercise 3.15 - first attempt (not ideal)
   /*def concat[A](as: List[List[A]]): List[A] = {
     def go(l: List[List[A]], acc: List[A]): List[A] = l match {
       case Nil => acc
@@ -112,6 +112,8 @@ object List {
 
     go(as, List[A]())
   }*/
+
+  // Exercise 3.15 - better
   def concat[A](as: List[List[A]]): List[A] = foldRight(as, Nil: List[A])(append)
 
   // Exercise 3.16
@@ -123,7 +125,7 @@ object List {
   // Exercise 3.18 - Using foldRight (not stack safe)
   def mapR[A, B](as: List[A])(f: A => B): List[B] = foldRight(as, Nil: List[B])((h, t) => Cons(f(h), t))
 
-  // Exercise 3.19 - Using buffer
+  // Exercise 3.19 - Using buffer (stack safe)
   def map[A, B](as: List[A])(f: A => B): List[B] = {
     val buffer = mutable.ListBuffer[B]()
 
