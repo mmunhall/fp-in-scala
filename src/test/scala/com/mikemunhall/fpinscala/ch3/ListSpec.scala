@@ -111,5 +111,31 @@ class ListSpec extends Specification {
         List.reverse(List(1, 2, 3)) === List(3, 2, 1)
       }
     }
+
+    "appendR" >> {
+      "appends two lists in terms of foldRight" >> {
+        List.append(List(1, 2, 3), List(4, 5, 6)) === List(1, 2, 3, 4, 5, 6)
+      }
+    }
+
+    "concat" >> {
+      "flattens a list of lists" >> {
+        List.concat(List(List(1, 2), List(3, 4))) === List(1, 2, 3, 4)
+        List.concat(List(List(1, 2, 3, 4), List(5, 6))) === List(1, 2, 3, 4, 5, 6)
+        List.concat(List(List(1, 2), List(3, 4, 5, 6))) === List(1, 2, 3, 4, 5, 6)
+      }
+    }
+
+    "addOne" >> {
+      "adds one to every element of a list of integers" >> {
+        List.addOne(List(1, 2, 3)) === List(2, 3, 4)
+      }
+    }
+
+    "doubleToString" >> {
+      "converts every element of a list of doubles to a string" >> {
+        List.doubleToString(List(1.0, 2.0, 3.0)) === List("1.0", "2.0", "3.0")
+      }
+    }
   }
 }
