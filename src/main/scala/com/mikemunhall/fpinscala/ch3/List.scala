@@ -1,5 +1,7 @@
 package com.mikemunhall.fpinscala.ch3
 
+import scala.collection.mutable
+
 sealed trait List[+A]
 case object Nil extends List[Nothing]
 case class Cons[+A](head: A, tail: List[A]) extends List[A]
@@ -117,4 +119,24 @@ object List {
 
   // Exercise 3.17
   def doubleToString(as: List[Double]): List[String] = foldRight(as, Nil: List[String])((a, b) => Cons(a.toString, b))
+
+  // Exercise 3.18 - Using foldRight (not stack safe)
+  def mapR[A, B](as: List[A])(f: A => B): List[B] = foldRight(as, Nil: List[B])((h, t) => Cons(f(h), t))
+
+  // Exercise 3.19 - Using buffer
+  def map[A, B](as: List[A])(f: A => B): List[B] = {
+    val buffer = mutable.ListBuffer[B]()
+
+    @annotation.tailrec
+    def go(l: List[A]): Unit = l match {
+      case Nil => ()
+      case Cons(h, t) => {
+        buffer += f(h)
+        go(t)
+      }
+    }
+
+    go(as)
+    List(buffer.toList: _*)
+  }
 }

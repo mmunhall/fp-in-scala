@@ -137,5 +137,11 @@ class ListSpec extends Specification {
         List.doubleToString(List(1.0, 2.0, 3.0)) === List("1.0", "2.0", "3.0")
       }
     }
+
+    "map" >> {
+      "converts every element of a list of A to a list of B" >> {
+        List.map(List(1, 2, 3))(_.toString) === List("1", "2", "3")
+      }
+    }
   }
 }
