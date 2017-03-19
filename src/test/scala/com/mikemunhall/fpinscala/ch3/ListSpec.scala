@@ -143,5 +143,40 @@ class ListSpec extends Specification {
         List.map(List(1, 2, 3))(_.toString) === List("1", "2", "3")
       }
     }
+
+    "filter" >> {
+      "return a list of even numbers" >> {
+        List.filter(List(1, 2, 3, 4))(_ % 2 == 0) === List(2, 4)
+        List.filter[Int](Nil)(_ % 2 == 0) === Nil
+      }
+    }
+
+    "flatMap" >> {
+      "flattens a list (map does not)" >> {
+        List.map(List(1, 2, 3))(a => List(a - 1, a, a + 1)) === List(List(0, 1, 2), List(1, 2, 3), List(2, 3, 4))
+        List.flatMap(List(1, 2, 3))(a => List(a - 1, a, a + 1)) === List(0, 1, 2, 1, 2, 3, 2, 3, 4)
+        List.flatMapR(List(1, 2, 3))(a => List(a - 1, a, a + 1)) === List(0, 1, 2, 1, 2, 3, 2, 3, 4)
+      }
+    }
+
+    "filterFM" >> {
+      "filter a list of even numbers" >> {
+        List.filterFm(List(1, 2, 3, 4, 5, 6))(_ % 2 == 0) == List(2, 4, 6)
+      }
+    }
+
+    "addPairs" >> {
+      "add pairs of integers" >> {
+        List.addPairs(List(1, 2, 3), List(4, 5, 6)) === List(5, 7, 9)
+      }
+    }
+
+    "zipWith" >> {
+      "is a generalized version of addPairs over A and B" >> {
+        List.zipWith[Int, Int, Int](List(1, 2, 3), List(4, 5, 6))(_ + _) === List(5, 7, 9)
+        List.zipWith[Int, Double, Double](List(1, 2, 3), List(4, 5, 6))((a, b) => (a + b).toDouble) === List(5.0, 7.0, 9.0)
+        List.zipWith[Int, Double, String](List(1, 2, 3), List(4.0, 5.0, 6.0))((a, b) => (a + b).toString) === List("5.0", "7.0", "9.0")
+      }
+    }
   }
 }

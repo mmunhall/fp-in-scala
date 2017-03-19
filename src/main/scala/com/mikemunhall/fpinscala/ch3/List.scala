@@ -3,7 +3,9 @@ package com.mikemunhall.fpinscala.ch3
 import scala.collection.mutable
 
 sealed trait List[+A]
+
 case object Nil extends List[Nothing]
+
 case class Cons[+A](head: A, tail: List[A]) extends List[A]
 
 object List {
@@ -103,7 +105,7 @@ object List {
   def appendR[A](a1: List[A], a2: List[A]): List[A] = foldRight(a1, a2)(Cons(_, _))
 
   // Exercise 3.15 - first attempt (not ideal)
-  /*def concat[A](as: List[List[A]]): List[A] = {
+  def concat_[A](as: List[List[A]]): List[A] = {
     def go(l: List[List[A]], acc: List[A]): List[A] = l match {
       case Nil => acc
       //case Cons(h, t) => go(t, append(acc, h))
@@ -111,7 +113,7 @@ object List {
     }
 
     go(as, List[A]())
-  }*/
+  }
 
   // Exercise 3.15 - better
   def concat[A](as: List[List[A]]): List[A] = foldRight(as, Nil: List[A])(append)
@@ -120,12 +122,14 @@ object List {
   def addOne(as: List[Int]): List[Int] = foldRight(as, Nil: List[Int])((a, b) => Cons(a + 1, b))
 
   // Exercise 3.17
-  def doubleToString(as: List[Double]): List[String] = foldRight(as, Nil: List[String])((a, b) => Cons(a.toString, b))
+  def doubleToString(as: List[Double]): List[String] =
+    foldRight(as, Nil: List[String])((a, b) => Cons(a.toString, b))
 
   // Exercise 3.18 - Using foldRight (not stack safe)
-  def mapR[A, B](as: List[A])(f: A => B): List[B] = foldRight(as, Nil: List[B])((h, t) => Cons(f(h), t))
+  def mapR[A, B](as: List[A])(f: A => B): List[B] =
+    foldRight(as, Nil: List[B])((h, t) => Cons(f(h), t))
 
-  // Exercise 3.19 - Using buffer (stack safe)
+  // Exercise 3.18 - Using buffer (stack safe)
   def map[A, B](as: List[A])(f: A => B): List[B] = {
     val buffer = mutable.ListBuffer[B]()
 
@@ -139,6 +143,36 @@ object List {
     }
 
     go(as)
+
     List(buffer.toList: _*)
+  }
+
+  // Exercise 3.19
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    foldRight(as, Nil: List[A])((a, b) => if (f(a)) Cons(a, b) else b)
+
+  // Exercise 3.20 - with foldRight
+  def flatMapR[A, B](as: List[A])(f: A => List[B]): List[B] = {
+    foldRight(as, Nil: List[B])((a, b) => append(f(a), b))
+  }
+
+  // Exercise 3.20 - with concat
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = concat(map(as)(f))
+
+  // Exercise 3.21
+  def filterFm[A](as: List[A])(f: A => Boolean): List[A] = flatMap(as)(a => if (f(a)) List(a) else Nil)
+
+  // Exercise 3.22
+  def addPairs(as: List[Int], bs: List[Int]): List[Int] = (as, bs) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(hl, tl), Cons(hr, tr)) => Cons(hl + hr, addPairs(tl, tr))
+  }
+
+  // Exercise 3.23
+  def zipWith[A, B, C](as: List[A], bs: List[B])(f: (A, B) => C): List[C] = (as, bs) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(hl, tl), Cons(hr, tr)) => Cons(f(hl, hr), zipWith(tl, tr)(f))
   }
 }

@@ -31,6 +31,8 @@ Notes
 foldRight vs foldLeft
 ---------------------
 
+_Hint: The name of the function tells you which argument is the accumulator._
+
 foldRight
 
     f(a, f(b, f(c, z)))
