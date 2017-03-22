@@ -175,4 +175,38 @@ object List {
     case (_, Nil) => Nil
     case (Cons(hl, tl), Cons(hr, tr)) => Cons(f(hl, hr), zipWith(tl, tr)(f))
   }
+
+  // Exercise 3.24 - 1/2
+  //
+  def hasSubsequencePoorMan[A](sup: List[A], sub: List[A]): Boolean = {
+    var found = false
+
+    def loop(l: List[A]): Unit = (l, sub) match {
+      case (_, Nil) =>
+      case (Nil, _) =>
+      case (Cons(supH, supT), Cons(subH, subT)) =>
+        println(s"sup head: $supH")
+        if (supH == subH) {
+          println(s"Possible match to sub head: $subH")
+          if (isSeq(supT, subT)) found = true
+        }
+        loop(supT)
+    }
+
+    def isSeq(sup: List[A], sub: List[A]): Boolean = (sup, sub) match {
+      case (_, Nil) => true
+      case (Nil, _) => false
+      case (Cons(supH, supT), Cons(subH, subT)) =>
+        if (supH == subH) {
+          println(s"Next match - sup: $supH, sub: $subH")
+          isSeq(supT, subT)
+        } else {
+          false
+        }
+    }
+
+    loop(sup)
+
+    found
+  }
 }
