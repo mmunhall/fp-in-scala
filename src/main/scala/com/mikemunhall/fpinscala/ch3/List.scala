@@ -176,18 +176,18 @@ object List {
     case (Cons(hl, tl), Cons(hr, tr)) => Cons(f(hl, hr), zipWith(tl, tr)(f))
   }
 
-  // Exercise 3.24 - 1/2
-  //
-  def hasSubsequencePoorMan[A](sup: List[A], sub: List[A]): Boolean = {
+  // Exercise 3.24
+  // This is a brute force attempt just to get something working. It could be improved.
+  // Remarkably, it is somewhat similar to the solution in the [companion book](http://blog.higher-order.com/assets/fpiscompanion.pdf).
+  // It is not nearly as elegant as [Brian's solution](https://github.com/bjhartin/fp-in-scala/blob/master/src/main/scala/ch3/List.scala#L89-L93)
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
     var found = false
 
     def loop(l: List[A]): Unit = (l, sub) match {
       case (_, Nil) =>
       case (Nil, _) =>
       case (Cons(supH, supT), Cons(subH, subT)) =>
-        println(s"sup head: $supH")
         if (supH == subH) {
-          println(s"Possible match to sub head: $subH")
           if (isSeq(supT, subT)) found = true
         }
         loop(supT)
@@ -198,7 +198,6 @@ object List {
       case (Nil, _) => false
       case (Cons(supH, supT), Cons(subH, subT)) =>
         if (supH == subH) {
-          println(s"Next match - sup: $supH, sub: $subH")
           isSeq(supT, subT)
         } else {
           false

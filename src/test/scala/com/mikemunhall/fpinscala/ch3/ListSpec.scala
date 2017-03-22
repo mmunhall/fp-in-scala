@@ -4,7 +4,7 @@ import org.specs2.mutable.Specification
 
 class ListSpec extends Specification {
 
-  /*"tail" >> {
+  "tail" >> {
     "return the tail of a list" >> {
       List.tail(List("a", "b", "c")) === List("b", "c")
       List.tail(List("a", "b", "c")) === Cons("b", Cons("c", Nil))
@@ -178,21 +178,23 @@ class ListSpec extends Specification {
       List.zipWith[Int, Double, Double](List(1, 2, 3), List(4, 5, 6))((a, b) => (a + b).toDouble) === List(5.0, 7.0, 9.0)
       List.zipWith[Int, Double, String](List(1, 2, 3), List(4.0, 5.0, 6.0))((a, b) => (a + b).toString) === List("5.0", "7.0", "9.0")
     }
-  }*/
+  }
 
   "hasSubsequence" >> {
     "finds nested sequences" >> {
-      List.hasSubsequencePoorMan(List(1, 2, 3, 4), List(2, 3)) must beTrue
-      List.hasSubsequencePoorMan(List(1, 2, 3, 4), List(2, 5)) must beFalse
-      List.hasSubsequencePoorMan(List(1, 2, 3, 4), List(10, 11)) must beFalse
-      List.hasSubsequencePoorMan(List(1, 2, 3, 4), List(2)) must beTrue
-      List.hasSubsequencePoorMan(List(1, 2, 3, 4), List(1)) must beTrue
-      List.hasSubsequencePoorMan(List(1, 2, 3, 4), List(4)) must beTrue
-      List.hasSubsequencePoorMan(List(1, 2, 3, 4), List(1, 2)) must beTrue
-      List.hasSubsequencePoorMan(List(1, 2, 3, 4), List(3, 4)) must beTrue
-      List.hasSubsequencePoorMan(List(1, 2, 3, 4), Nil) must beFalse
-      List.hasSubsequencePoorMan(Nil, List(1)) must beFalse
-      List.hasSubsequencePoorMan(Nil, Nil) must beFalse
+      List.hasSubsequence(List(1, 2, 3, 4), List(2, 3)) must beTrue
+      List.hasSubsequence(List(1, 2, 3, 4), List(2, 5)) must beFalse
+      List.hasSubsequence(List(1, 2, 3, 4), List(10, 11)) must beFalse
+      List.hasSubsequence(List(1, 2, 3, 4), List(2)) must beTrue
+      List.hasSubsequence(List(1, 2, 3, 4), List(1)) must beTrue
+      List.hasSubsequence(List(1, 2, 3, 4), List(4)) must beTrue
+      List.hasSubsequence(List(1, 2, 3, 4), List(1, 2)) must beTrue
+      List.hasSubsequence(List(1, 2, 3, 4), List(3, 4)) must beTrue
+      List.hasSubsequence(List(1, 2, 2, 3, 2, 10, 11), List(2, 10)) must beTrue
+      List.hasSubsequence(List(1, 2, 3, 2, 10, 11), List(2, 3)) must beTrue
+      List.hasSubsequence(List(1, 2, 3, 4), Nil) must beFalse
+      List.hasSubsequence(Nil, List(1)) must beFalse
+      List.hasSubsequence(Nil, Nil) must beFalse
     }
   }
 
