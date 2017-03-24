@@ -21,4 +21,12 @@ class TreeSpec extends Specification {
     }
   }
 
+  "depth" >> {
+    "calculates the depth of the deepest node" >> {
+      Tree.depth(Branch(Leaf("a"), Leaf("a"))) === 2
+      Tree.depth(Branch(Leaf("a"), Branch(Leaf("b"), Leaf("c")))) === 3
+      Tree.depth(Branch(Leaf("a"), Branch(Leaf("b"), Branch(Leaf("c"), Leaf("d"))))) === 4
+      Tree.depth(Branch(Branch(Leaf("b"), Branch(Leaf("c"), Leaf("d"))), Leaf("a"))) === 4
+    }
+  }
 }
