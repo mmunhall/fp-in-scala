@@ -29,4 +29,11 @@ class TreeSpec extends Specification {
       Tree.depth(Branch(Branch(Leaf("b"), Branch(Leaf("c"), Leaf("d"))), Leaf("a"))) === 4
     }
   }
+
+  "map" >> {
+    "converts a tree from type to type B" >> {
+      Tree.map(Branch(Branch(Leaf(1), Branch(Leaf(2), Leaf(3))), Leaf(4)))(_.toDouble) ===
+        Branch(Branch(Leaf(1.0), Branch(Leaf(2.0), Leaf(3.0))), Leaf(4.0))
+    }
+  }
 }
