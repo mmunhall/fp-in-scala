@@ -11,4 +11,14 @@ class TreeSpec extends Specification {
     }
   }
 
+  "maximum" >> {
+    "finds the highest value in an Int tree" >> {
+      Tree.maximum(Branch(Leaf(2), Leaf(1))) === 2
+      Tree.maximum(Branch(Leaf(1), Leaf(2))) === 2
+      Tree.maximum(Branch(Leaf(1), Branch(Leaf(2), Leaf(3)))) === 3
+      Tree.maximum(Branch(Leaf(1), Branch(Leaf(3), Leaf(2)))) === 3
+      Tree.maximum(Branch(Leaf(3), Branch(Leaf(1), Leaf(1)))) === 3
+    }
+  }
+
 }
