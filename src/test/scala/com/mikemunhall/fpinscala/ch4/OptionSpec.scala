@@ -13,4 +13,9 @@ class OptionSpec extends Specification {
     Some(1).flatMap(v => Some(v.toString)) === Some("1")
     None.flatMap(v => Some(v.toString)) === None
   }
+
+  "getOrElse" >> {
+    Some(1).getOrElse(2) === 1
+    None.getOrElse(2) === 2
+  }
 }
