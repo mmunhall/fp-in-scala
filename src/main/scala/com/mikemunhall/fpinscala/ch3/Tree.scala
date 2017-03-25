@@ -40,5 +40,7 @@ object Tree {
   def sizeF[A](t: Tree[A]): Int = fold[A, Int](t)(_ => 1)(1 + _ + _)
   def maximumF[A](t: Tree[Int]): Int = fold[Int, Int](t)(a => a)(_ max _)
   def depthF[A](t: Tree[A]): Int = fold[A, Int](t)(_ => 1)((l, r) => 1 + (l max r))
+
+  // Shitty: The return type has to be specified on f, otherwise it won't compile. This is a Scala type inference thing.
   def mapF[A, B](t: Tree[A])(f: A => B): Tree[B] = fold(t)(a => Leaf(f(a)): Tree[B])(Branch(_, _))
 }

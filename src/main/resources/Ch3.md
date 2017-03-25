@@ -28,6 +28,7 @@ Notes
 
 * The exercises were helpful, but how do you get in the _mindset_ to program this way? For example, I was able to find the solution for foldLeft() because the signature _told_ me how to implement it. But, how does a programmer come up with that signature to begin with?
 * Helpful definition of ADT: We say that the data type is the sum or union of its data constructors, and each data constructor is the product of its arguments, hence the name algebraic data type.
+* fold() can be used to implement any recursive function that would otherwise use pattern matching.
 
 foldRight vs foldLeft
 ---------------------
