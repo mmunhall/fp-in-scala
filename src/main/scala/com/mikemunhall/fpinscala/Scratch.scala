@@ -1,14 +1,8 @@
 package com.mikemunhall.fpinscala
 
-import ch4._
+import ch4.Variance._
 
 object Scratch extends App {
 
-  case class Employee(name: String, department: String)
-
-  def lookupByName(name: String): Option[Employee] = Some(Employee(name, "engineering"))
-
-  val joeDepartment: Option[String] = lookupByName("Joe").map(_.department)
-
-  println(joeDepartment)
+  variance(Seq(1.0, 2.0, 3.0, 4.0))
 }
