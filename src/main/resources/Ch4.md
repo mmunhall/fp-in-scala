@@ -1,4 +1,4 @@
-Chapter 3 Notes
+Chapter 4 Notes
 ===============
 
 * Implementing the functions for 4.1 was easy when pattern matching. I struggled when converting my pattern matching functions to non-pattern matching functions. I had to cheat a bit and glance at the solutions. Even after figuring out the solutions, it still DID not feel natural or intuitive, and that's frustrating. Even when reviewing the functions I still have to concentrate to figure out what they're doing.
