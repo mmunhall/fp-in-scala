@@ -29,4 +29,11 @@ class OptionSpec extends Specification {
     Some(1).filter(_ < 1) === None
     None.filter((a: Int) => a < 1) === None
   }
+
+  "map2" >> {
+    Option.map2[Int, Int, Int](None, Some(1))(_ + _) === None
+    Option.map2[Int, Int, Int](Some(1), None)(_ + _) === None
+    Option.map2[Int, Int, Int](None, None)(_ + _) === None
+    Option.map2[Int, Int, Int](Some(2), Some(1))(_ + _) === Some(3)
+  }
 }
