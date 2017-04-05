@@ -30,10 +30,25 @@ class OptionSpec extends Specification {
     None.filter((a: Int) => a < 1) === None
   }
 
+  "lift" >> {
+    def liftedAbs = Option.lift(math.abs)
+    liftedAbs(Some(-1)) === Some(1)
+    liftedAbs(None) === None
+  }
+
   "map2" >> {
-    Option.map2[Int, Int, Int](None, Some(1))(_ + _) === None
-    Option.map2[Int, Int, Int](Some(1), None)(_ + _) === None
-    Option.map2[Int, Int, Int](None, None)(_ + _) === None
-    Option.map2[Int, Int, Int](Some(2), Some(1))(_ + _) === Some(3)
+    "using the matcher version" >> {
+      Option.map2m[Int, Int, Int](None, Some(1))(_ + _) === None
+      Option.map2m[Int, Int, Int](Some(1), None)(_ + _) === None
+      Option.map2m[Int, Int, Int](None, None)(_ + _) === None
+      Option.map2m[Int, Int, Int](Some(2), Some(1))(_ + _) === Some(3)
+    }
+
+    "using flatMap" >> {
+      Option.map2[Int, Int, Int](None, Some(1))(_ + _) === None
+      Option.map2[Int, Int, Int](Some(1), None)(_ + _) === None
+      Option.map2[Int, Int, Int](None, None)(_ + _) === None
+      Option.map2[Int, Int, Int](Some(2), Some(1))(_ + _) === Some(3)
+    }
   }
 }

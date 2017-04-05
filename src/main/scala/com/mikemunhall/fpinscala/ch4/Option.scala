@@ -27,13 +27,17 @@ case object None extends Option[Nothing]
 case class Some[+A](get: A) extends Option[A]
 
 object Option {
-
   def lift[A, B](f: A => B): Option[A] => Option[B] = _ map f
 
-  // Exercise 4.3
-  def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = (a, b) match {
+  // Exercise 4.3 - Using a matcher
+  def map2m[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = (a, b) match {
     case (None, _) => None
     case (_, None) => None
     case (Some(a), Some(b)) => Some(f(a, b))
+  }
+
+  // Exercise 4.3 - Using flatMap and possibly map
+  def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = {
+    a.flatMap(ai => b.map(bi => f(ai, bi)))
   }
 }
