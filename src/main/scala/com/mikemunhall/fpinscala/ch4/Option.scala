@@ -36,7 +36,7 @@ object Option {
     case (Some(a), Some(b)) => Some(f(a, b))
   }
 
-  // Exercise 4.3 - Using flatMap and possibly map
+  // Exercise 4.3 - Using flatMap and map
   def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = {
     a.flatMap(ai => b.map(bi => f(ai, bi)))
   }
