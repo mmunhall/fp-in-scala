@@ -45,9 +45,9 @@ object Option {
     a.flatMap(ai => b.flatMap(bi => c.map(ci => f(ai, bi, ci))))
 
   // Exercise 4.4
-  def sequence[A](a: List[Option[A]]): Option[List[A]] = a match {
+  def sequenceM[A](a: List[Option[A]]): Option[List[A]] = a match {
     case Nil => Some(Nil)
-    case h :: t => h.flatMap(hi => sequence(t).map(hi :: _))
+    case h :: t => h.flatMap(hi => sequenceM(t).map(hi :: _))
   }
 
   // Exercise 4.5 - 1/2 - using map
@@ -69,6 +69,6 @@ object Option {
   }
 
   // Exercise 4.5 - 2/2
-  def sequenceT[A](a: List[Option[A]]): Option[List[A]] = ???
+  def sequence[A](a: List[Option[A]]): Option[List[A]] = traverse(a)(aa => aa)
 
 }

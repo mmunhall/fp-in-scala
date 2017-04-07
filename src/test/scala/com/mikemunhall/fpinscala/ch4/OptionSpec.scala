@@ -61,8 +61,15 @@ class OptionSpec extends Specification {
   }
 
   "sequence" >> {
-    Option.sequence(List(Some(1), Some(2))) === Some(List(1, 2))
-    Option.sequence(List(Some(1), None)) === None
+    "using map" >> {
+      Option.sequenceM(List(Some(1), Some(2))) === Some(List(1, 2))
+      Option.sequenceM(List(Some(1), None)) === None
+    }
+
+    "using traverse" >> {
+      Option.sequence(List(Some(1), Some(2))) === Some(List(1, 2))
+      Option.sequence(List(Some(1), None)) === None
+    }
   }
 
   "traverse" >> {
