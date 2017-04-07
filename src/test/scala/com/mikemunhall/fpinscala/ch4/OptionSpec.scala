@@ -32,6 +32,7 @@ class OptionSpec extends Specification {
 
   "lift" >> {
     def liftedAbs = Option.lift(math.abs)
+
     liftedAbs(Some(-1)) === Some(1)
     liftedAbs(None) === None
   }
@@ -49,6 +50,32 @@ class OptionSpec extends Specification {
       Option.map2[Int, Int, Int](Some(1), None)(_ + _) === None
       Option.map2[Int, Int, Int](None, None)(_ + _) === None
       Option.map2[Int, Int, Int](Some(2), Some(1))(_ + _) === Some(3)
+    }
+  }
+
+  "map3" >> {
+    Option.map3[Int, Int, Int, Int](None, Some(1), Some(2))(_ + _ + _) === None
+    Option.map3[Int, Int, Int, Int](Some(1), None, Some(2))(_ + _ + _) === None
+    Option.map3[Int, Int, Int, Int](None, None, None)(_ + _ + _) === None
+    Option.map3[Int, Int, Int, Int](Some(2), Some(1), Some(3))(_ + _ + _) === Some(6)
+  }
+
+  "sequence" >> {
+    Option.sequence(List(Some(1), Some(2))) === Some(List(1, 2))
+    Option.sequence(List(Some(1), None)) === None
+  }
+
+  "traverse" >> {
+    "using map" >> {
+      Option.traverseM(List(1, 2, 3))(Some(_)) === Some(List(1, 2, 3))
+      Option.traverseM(List(2, 4, 6))(a => if (a % 2 == 0) Some(1) else None) === Some(List(1, 1, 1))
+      Option.traverseM(List(1, 2, 3))(a => if (a % 2 == 0) Some(1) else None) === None
+    }
+
+    "using map2" >> {
+      Option.traverse(List(1, 2, 3))(Some(_)) === Some(List(1, 2, 3))
+      Option.traverse(List(2, 4, 6))(a => if (a % 2 == 0) Some(1) else None) === Some(List(1, 1, 1))
+      Option.traverse(List(1, 2, 3))(a => if (a % 2 == 0) Some(1) else None) === None
     }
   }
 }

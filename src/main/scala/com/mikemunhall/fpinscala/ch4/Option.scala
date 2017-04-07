@@ -37,7 +37,38 @@ object Option {
   }
 
   // Exercise 4.3 - Using flatMap and map
-  def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = {
+  def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
     a.flatMap(ai => b.map(bi => f(ai, bi)))
+
+  // Just for fun
+  def map3[A, B, C, D](a: Option[A], b: Option[B], c: Option[C])(f: (A, B, C) => D): Option[D] =
+    a.flatMap(ai => b.flatMap(bi => c.map(ci => f(ai, bi, ci))))
+
+  // Exercise 4.4
+  def sequence[A](a: List[Option[A]]): Option[List[A]] = a match {
+    case Nil => Some(Nil)
+    case h :: t => h.flatMap(hi => sequence(t).map(hi :: _))
   }
+
+  // Exercise 4.5 - 1/2 - using map
+  def traverseM[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = {
+    a.foldRight {
+      Some(Nil): Option[List[B]]
+    } { (aa, acc) =>
+      f(aa).flatMap(aaa => acc.map(aaa :: _))
+    }
+  }
+
+  // Exercise 4.5 - 1/2 - using map2
+  def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = {
+    a.foldRight {
+      Some(Nil): Option[List[B]]
+    } { (h, t) =>
+      map2(f(h), t)(_ :: _)
+    }
+  }
+
+  // Exercise 4.5 - 2/2
+  def sequenceT[A](a: List[Option[A]]): Option[List[A]] = ???
+
 }
