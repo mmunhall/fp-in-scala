@@ -33,5 +33,22 @@ sealed trait Either[+E, +A] {
   } yield f(aa, bb)
 
 }
+
 case class Left[+E](value: E) extends Either[E, Nothing]
 case class Right[+A](value: A) extends Either[Nothing, A]
+
+object Either {
+  // Exercise 4.7 - 1/2 - using matcher
+  def sequenceM[E, A](es: List[Either[E, A]]): Either[E, List[A]] = es match {
+    case Nil => Right(Nil)
+    case h :: t => h.flatMap(hh => sequenceM(t).map(hh :: _))
+  }
+
+  // Exercise 4.7 - 2/2
+  def traverse[E, A, B](as: List[A])(f: A => Either[E, B]): Either[E, List[B]] = as match {
+    case Nil => Right(Nil)
+    case h :: t => f(h).map2(traverse(t)(f))(_ :: _)
+  }
+
+  def sequence[E, A](es: List[Either[E, A]]): Either[E, List[A]] = traverse(es)(esa => esa)
+}

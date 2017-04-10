@@ -34,4 +34,18 @@ class EitherSpec extends Specification {
     }
   }
 
+  "sequence" >> {
+    "using matcher" >> {
+      Either.sequenceM(List(Right(1), Right(2))) === Right(List(1, 2))
+      Either.sequenceM(List(Left("nope"), Right(2))) === Left("nope")
+      Either.sequenceM(List(Right(1), Left("nope"))) === Left("nope")
+    }
+
+    "using traverse" >> {
+      Either.sequence(List(Right(1), Right(2))) === Right(List(1, 2))
+      Either.sequence(List(Left("nope"), Right(2))) === Left("nope")
+      Either.sequence(List(Right(1), Left("nope"))) === Left("nope")
+    }
+  }
+
 }

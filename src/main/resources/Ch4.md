@@ -7,3 +7,8 @@ Chapter 4 Notes
 * 4.5 was a bitch.
 * `sequence` flips (i.e, `F[G[A]]` to `G[F[A]]`)
 * `traverse` is `map` then `sequence`
+
+Exercise 4.8
+------------
+
+A naive approach might be to nest `Either`s. That would become unwieldy quickly. A better approach might be to have the `Left` type be a list of some sort. I believe this is what Scalaz's `Validation` is.
