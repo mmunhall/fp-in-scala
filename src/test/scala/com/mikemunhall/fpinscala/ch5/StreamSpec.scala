@@ -38,4 +38,11 @@ class StreamSpec extends Specification {
     Stream(1, 2, 3, 4, 5).drop(0).toList === List(1, 2, 3, 4, 5)
     Stream().drop(5) === Empty
   }
+
+  "takeWhile" >> {
+    Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 == 0) === Empty
+    Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 != 0).toList === List(1)
+    Stream(2, 4, 6, 1, 2, 8).takeWhile(_ % 2 == 0).toList === List(2, 4, 6)
+    Stream[Int]().takeWhile(_ % 2 == 0) === Empty
+  }
 }
