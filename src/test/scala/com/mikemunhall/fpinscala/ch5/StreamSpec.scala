@@ -45,4 +45,9 @@ class StreamSpec extends Specification {
     Stream(2, 4, 6, 1, 2, 8).takeWhile(_ % 2 == 0).toList === List(2, 4, 6)
     Stream[Int]().takeWhile(_ % 2 == 0) === Empty
   }
+
+  "exists implemented with foldRight" >> {
+    Stream(10, 9, 8, 7).exists(_ <= 7) === true
+    Stream(10, 9, 8, 7).exists(_ <= 1) === false
+  }
 }
