@@ -48,8 +48,7 @@ sealed trait Stream[+A] {
   // Exercise 5.2 - 1/2
   def drop(n: Int): Stream[A] = this match {
     case Cons(_, t) if n > 0 => t().drop(n - 1)
-    case Cons(h, t) => cons(h(), t().drop(n - 1))
-    case _ => empty
+    case _ => this
   }
 
 }
