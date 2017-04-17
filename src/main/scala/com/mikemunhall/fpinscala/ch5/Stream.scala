@@ -65,6 +65,9 @@ sealed trait Stream[+A] {
 
   def exists(p: A => Boolean): Boolean = foldRight(false)((a, b) => p(a) || b)
 
+  // Exercise 5.4
+  def forAll(p: A => Boolean): Boolean = foldRight(true)((a, b) => p(a) && b)
+
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]

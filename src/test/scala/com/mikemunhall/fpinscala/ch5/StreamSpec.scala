@@ -50,4 +50,12 @@ class StreamSpec extends Specification {
     Stream(10, 9, 8, 7).exists(_ <= 7) === true
     Stream(10, 9, 8, 7).exists(_ <= 1) === false
   }
+
+  "forAll" >> {
+    Stream[Int]().forAll(_ % 2 == 0) === true
+    Stream(2, 4, 6).forAll(_ % 2 == 0) === true
+    Stream(2, 4, 1).forAll(_ % 2 == 0) === false
+    Stream(1, 2, 4).forAll(_ % 2 == 0) === false
+    Stream(1).forAll(_ % 2 == 0) === false
+  }
 }
