@@ -40,10 +40,19 @@ class StreamSpec extends Specification {
   }
 
   "takeWhile" >> {
-    Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 == 0) === Empty
-    Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 != 0).toList === List(1)
-    Stream(2, 4, 6, 1, 2, 8).takeWhile(_ % 2 == 0).toList === List(2, 4, 6)
-    Stream[Int]().takeWhile(_ % 2 == 0) === Empty
+    "using matcher" >> {
+      Stream(1, 2, 3, 4, 5, 6).takeWhileM(_ % 2 == 0) === Empty
+      Stream(1, 2, 3, 4, 5, 6).takeWhileM(_ % 2 != 0).toList === List(1)
+      Stream(2, 4, 6, 1, 2, 8).takeWhileM(_ % 2 == 0).toList === List(2, 4, 6)
+      Stream[Int]().takeWhileM(_ % 2 == 0) === Empty  
+    }
+    
+    "using foldRight" >> {
+      Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 == 0) === Empty
+      Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 != 0).toList === List(1)
+      Stream(2, 4, 6, 1, 2, 8).takeWhile(_ % 2 == 0).toList === List(2, 4, 6)
+      Stream[Int]().takeWhile(_ % 2 == 0) === Empty
+    }
   }
 
   "exists implemented with foldRight" >> {

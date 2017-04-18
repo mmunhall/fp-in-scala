@@ -52,9 +52,9 @@ sealed trait Stream[+A] {
     case _ => this
   }
 
-  // Exercise 5.3
-  def takeWhile(f: A => Boolean): Stream[A] = this match {
-    case Cons(h, t) if f(h()) => cons(h(), t() takeWhile(f))
+  // Exercise 5.3 - Using matcher
+  def takeWhileM(f: A => Boolean): Stream[A] = this match {
+    case Cons(h, t) if f(h()) => cons(h(), t() takeWhileM(f))
     case _ => empty
   }
 
@@ -67,6 +67,9 @@ sealed trait Stream[+A] {
 
   // Exercise 5.4
   def forAll(p: A => Boolean): Boolean = foldRight(true)((a, b) => p(a) && b)
+
+  // Exercise 5.5
+  def takeWhile(f: A => Boolean): Stream[A] = foldRight(Stream[A]())((a, b) => if (f(a)) cons(a, b) else empty)
 
 }
 case object Empty extends Stream[Nothing]
