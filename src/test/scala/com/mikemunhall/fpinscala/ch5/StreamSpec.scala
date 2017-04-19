@@ -44,9 +44,9 @@ class StreamSpec extends Specification {
       Stream(1, 2, 3, 4, 5, 6).takeWhileM(_ % 2 == 0) === Empty
       Stream(1, 2, 3, 4, 5, 6).takeWhileM(_ % 2 != 0).toList === List(1)
       Stream(2, 4, 6, 1, 2, 8).takeWhileM(_ % 2 == 0).toList === List(2, 4, 6)
-      Stream[Int]().takeWhileM(_ % 2 == 0) === Empty  
+      Stream[Int]().takeWhileM(_ % 2 == 0) === Empty
     }
-    
+
     "using foldRight" >> {
       Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 == 0) === Empty
       Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 != 0).toList === List(1)
@@ -103,10 +103,27 @@ class StreamSpec extends Specification {
 
   val ones: Stream[Int] = Stream.cons(1, ones)
   "infinite stream" >> {
-    type StreamType = Cons[_]
-    ones.take(5).toList === List(1, 1, 1, 1, 1)
-    ones.map(_ + 1).exists(_ % 2 == 0) must beTrue
-    ones.takeWhile(_ == 1) must beAnInstanceOf[StreamType]
-    ones.forAll(_ != 1) must beFalse
+    "ones" >> {
+      type StreamType = Cons[_]
+      ones.take(5).toList === List(1, 1, 1, 1, 1)
+      ones.map(_ + 1).exists(_ % 2 == 0) must beTrue
+      ones.takeWhile(_ == 1) must beAnInstanceOf[StreamType]
+      ones.forAll(_ != 1) must beFalse
+    }
+
+    "using constant" >> {
+      val twos = Stream.constant(2)
+      twos.take(5).toList === List(2, 2, 2, 2, 2)
+      twos.map(_ + 2).exists(_ % 2 == 0) must beTrue
+    }
+
+    "from" >> {
+      Stream.from(0).take(10).toList === List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    }
+
+    "fibs" >> {
+      Stream.fibs.take(7).toList === List(0, 1, 1, 2, 3, 5, 8)
+    }
   }
+
 }

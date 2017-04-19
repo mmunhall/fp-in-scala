@@ -110,5 +110,16 @@ object Stream {
   def apply[A](as: A*): Stream[A] =
     if (as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
 
+  // Exercise 5.8
+  def constant[A](a: A): Stream[A] = cons(a, constant(a))
+
+  // Exercise 5.9
+  def from(n: Int): Stream[Int] = cons(n, from(n + 1))
+
+  // Exercise 5.10
+  def fibs: Stream[Int] = {
+    def go(n: Int, m: Int): Stream[Int] = cons(n, go(n + m, n))
+    go(0, 1)
+  }
 }
 
