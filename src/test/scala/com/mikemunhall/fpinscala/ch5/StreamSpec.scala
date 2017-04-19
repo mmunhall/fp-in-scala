@@ -101,8 +101,12 @@ class StreamSpec extends Specification {
     Stream(1, 2, 3).flatMap(a => Stream(a - 1, a, a + 1)).toList === List(0, 1, 2, 1, 2, 3, 2, 3, 4)
   }
 
+  val ones: Stream[Int] = Stream.cons(1, ones)
   "infinite stream" >> {
-    val ones: Stream[Int] = Stream.cons(1, ones)
+    type StreamType = Cons[_]
     ones.take(5).toList === List(1, 1, 1, 1, 1)
+    ones.map(_ + 1).exists(_ % 2 == 0) must beTrue
+    ones.takeWhile(_ == 1) must beAnInstanceOf[StreamType]
+    ones.forAll(_ != 1) must beFalse
   }
 }

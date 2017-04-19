@@ -110,11 +110,5 @@ object Stream {
   def apply[A](as: A*): Stream[A] =
     if (as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
 
-  val ones: Stream[Int] = Stream.cons(1, ones)
-  println(ones.take(5).toList)
-  println(ones.map(_ + 1).exists(_ % 2 == 0))
-  println(ones.takeWhile(_ == 1).toList)
-  println(ones.forAll(_ != 1))
-
 }
 
