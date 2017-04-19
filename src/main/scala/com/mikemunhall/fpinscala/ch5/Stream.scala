@@ -3,7 +3,7 @@ package com.mikemunhall.fpinscala.ch5
 import com.mikemunhall.fpinscala.ch5.Stream.{cons, empty}
 
 sealed trait Stream[+A] {
-  def headOption: Option[A] = this match {
+  def headOptionM: Option[A] = this match {
     case Empty => None
     case Cons(h, _) => Some(h())
   }
@@ -69,7 +69,28 @@ sealed trait Stream[+A] {
   def forAll(p: A => Boolean): Boolean = foldRight(true)((a, b) => p(a) && b)
 
   // Exercise 5.5
-  def takeWhile(f: A => Boolean): Stream[A] = foldRight(Stream[A]())((a, b) => if (f(a)) cons(a, b) else empty)
+  def takeWhile(f: A => Boolean): Stream[A] =
+    foldRight(Stream[A]())((a, b) => if (f(a)) cons(a, b) else empty)
+
+  // Exercise 5.6
+  def headOption: Option[A] =
+    foldRight(None: Option[A])((a, b) => Some(a))
+
+  // Exercise 5.7 - 1/4
+  def map[B](f: A => B): Stream[B] =
+    foldRight(Stream[B]())((a, b) => cons(f(a), b))
+
+  // Exercise 5.7 - 2/4
+  def filter(f: A => Boolean): Stream[A] =
+    foldRight(Stream[A]())((a, b) => if (f(a)) cons(a, b) else b)
+
+  // Exercise 5.7 - 3/4
+  def append[B >: A](el: => Stream[B]): Stream[B] =
+    foldRight(el)((a, b) => cons(a, b))
+
+  // Exercise 5.7 - 4/4
+  def flatMap[B](f: A => Stream[B]): Stream[B] =
+    foldRight(Stream[B]())((a, b) => f(a) append b)
 
 }
 case object Empty extends Stream[Nothing]
@@ -81,8 +102,13 @@ object Stream {
     lazy val tail = tl
     Cons(() => head, () => tail)
   }
+
   def empty[A]: Stream[A] = Empty
 
   def apply[A](as: A*): Stream[A] =
     if (as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
+
+  val ones: Stream[Int] = Stream.cons(1, ones)
+
 }
+

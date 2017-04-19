@@ -67,4 +67,41 @@ class StreamSpec extends Specification {
     Stream(1, 2, 4).forAll(_ % 2 == 0) === false
     Stream(1).forAll(_ % 2 == 0) === false
   }
+
+  "headOption" >> {
+    "using matcher" >> {
+      Stream[Int]().headOptionM === None
+      Stream(1, 2, 3).headOptionM === Some(1)
+    }
+
+    "using foldRight" >> {
+      Stream[Int]().headOption === None
+      Stream(1, 2, 3).headOption === Some(1)
+    }
+  }
+
+  "map" >> {
+    Stream(1, 2, 3).map(_.toDouble).toList === List(1.0, 2.0, 3.0)
+    Stream[Double]().map(_.toString).toList === List[String]()
+    Stream[Double]().map(_.toString) === Empty
+  }
+
+  "filter" >> {
+    Stream(1, 2, 3, 4).filter(_ % 2 == 0).toList === List(2, 4)
+    Stream(1, 3, 5).filter(_ % 2 == 0) === Empty
+    Stream[Int]().filter(_ % 2 == 0) === Empty
+  }
+
+  "append" >> {
+    Stream(1, 2).append(Stream(3)).toList === List(1, 2, 3)
+    Stream().append(Stream(3)).toList === List(3)
+  }
+
+  "flatMap" >> {
+    Stream(1, 2, 3).flatMap(a => Stream(a - 1, a, a + 1)).toList === List(0, 1, 2, 1, 2, 3, 2, 3, 4)
+  }
+
+  "infinite stream" >> {
+    Stream.ones.take(5).toList === List(1, 1, 1, 1, 1)
+  }
 }
