@@ -73,12 +73,10 @@ sealed trait Stream[+A] {
     foldRight(Stream[A]())((a, b) => if (f(a)) cons(a, b) else empty)
 
   // Exercise 5.6
-  def headOption: Option[A] =
-    foldRight(None: Option[A])((a, b) => Some(a))
+  def headOption: Option[A] = foldRight(None: Option[A])((a, b) => Some(a))
 
   // Exercise 5.7 - 1/4
-  def map[B](f: A => B): Stream[B] =
-    foldRight(Stream[B]())((a, b) => cons(f(a), b))
+  def map[B](f: A => B): Stream[B] = foldRight(Stream[B]())((a, b) => cons(f(a), b))
 
   // Exercise 5.7 - 2/4
   def filter(f: A => Boolean): Stream[A] =
@@ -120,6 +118,12 @@ object Stream {
   def fibs: Stream[Int] = {
     def go(n: Int, m: Int): Stream[Int] = cons(n, go(n + m, n))
     go(0, 1)
+  }
+
+  // Exercise 5.11
+  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = f(z) match {
+    case Some((a, s)) => cons(a, unfold(s)(f))
+    case None => empty
   }
 }
 

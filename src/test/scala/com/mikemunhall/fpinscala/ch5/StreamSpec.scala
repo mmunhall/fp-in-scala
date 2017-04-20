@@ -124,6 +124,11 @@ class StreamSpec extends Specification {
     "fibs" >> {
       Stream.fibs.take(7).toList === List(0, 1, 1, 2, 3, 5, 8)
     }
+
+    "unfold" >> {
+      Stream.unfold[Int, Int](0)(a => if (a <= 10) Some((a, a + 2)) else None).toList ===
+        List(0, 2, 4, 6, 8, 10)
+    }
   }
 
 }
