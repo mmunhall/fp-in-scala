@@ -118,7 +118,13 @@ sealed trait Stream[+A] {
     }
 
   // Exercise 5.13 - 5/5
-  def zipAll = ???
+  def zipAll[B](s2: Stream[B]): Stream[(Option[A], Option[B])] =
+    Stream.unfold(this, s2) {
+      case (Cons(ah, at), Cons(bh, bt)) => Some(((Some(ah()), Some(bh())), (at(), bt())))
+      case (Cons(ah, at), empty)  => Some(((Some(ah()), None), (at(), empty)))
+      case (empty, Cons(bh, bt))  => Some(((None, Some(bh())), (empty, bt())))
+      case _ => None
+    }
 
   // Exercise 5.14
   def startsWith[A](s: Stream[A]): Boolean = ???

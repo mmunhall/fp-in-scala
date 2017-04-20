@@ -179,6 +179,17 @@ class StreamSpec extends Specification {
 
     "zipWith" >> {
       Stream(1, 2, 3).zipWith(Stream(.5, 1.0, 2.0))((a, b) => (a * b).toString).toList === List("0.5", "2.0", "6.0")
+      Stream(1, 2).zipWith(Stream(.5, 1.0, 2.0))((a, b) => (a * b).toString).toList === List("0.5", "2.0")
+      Stream(1, 2, 3).zipWith(Stream(.5, 1.0))((a, b) => (a * b).toString).toList === List("0.5", "2.0")
+    }
+
+    "zipAll" >> {
+      Stream(1, 2, 3).zipAll(Stream('a', 'b', 'c')).toList ===
+        List((Some(1), Some('a')), (Some(2), Some('b')), (Some(3), Some('c')))
+      Stream(1, 2, 3).zipAll(Stream('a', 'b')).toList ===
+        List((Some(1), Some('a')), (Some(2), Some('b')), (Some(3), None))
+      Stream(1, 2).zipAll(Stream('a', 'b', 'c')).toList ===
+        List((Some(1), Some('a')), (Some(2), Some('b')), (None, Some('c')))
     }
 
     "startsWith" >> {
