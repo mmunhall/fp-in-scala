@@ -92,12 +92,33 @@ sealed trait Stream[+A] {
 
   def find(f: A => Boolean): Option[A] = filter(f) headOption
 
-  // Exercise 5.13 - 1/4
+  // Exercise 5.13 - 1/5
   def mapU[B](f: A => B): Stream[B] = Stream.unfold(this) {
     case Cons(h, t) => Some((f(h()), t()))
     case _ => None
   }
 
+  // Exercise 5.13 - 2/5
+  def takeU(n: Int): Stream[A] = Stream.unfold((n, this)) {
+    case (n, Cons(h, t)) if n > 0 => Some(h(), (n - 1, t()))
+    case _ => None
+  }
+
+  // Exercise 5.13 - 3/5
+  def takeWhileU(f: A => Boolean): Stream[A] = Stream.unfold(this) {
+    case Cons(h, t) if f(h()) => Some((h(), t()))
+    case _ => None
+  }
+
+  // Exercise 5.13 - 4/5
+  def zipWith[B, C](bs: Stream[B])(f: (A, B) => C): Stream[C] =
+    Stream.unfold(this, bs) {
+      case (Cons(ah, at), Cons(bh, bt)) => Some((f(ah(), bh()), (at(), bt())))
+      case _ => None
+    }
+
+  // Exercise 5.13 - 5/5
+  def zipAll = ???
 
   // Exercise 5.14
   def startsWith[A](s: Stream[A]): Boolean = ???

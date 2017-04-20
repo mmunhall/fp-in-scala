@@ -17,18 +17,26 @@ class StreamSpec extends Specification {
   }
 
   "take" >> {
-    "takeR (reversed)" >> {
-      Stream(1, 2, 3, 4, 5).takeR(3).toList.reverse === List(1, 2, 3)
-      Stream(1, 2, 3, 4, 5).takeR(20).toList.reverse === List(1, 2, 3, 4, 5)
-      Stream(1, 2, 3, 4, 5).takeR(0) === Empty
-      Stream().takeR(5) === Empty
-    }
+    "recursively" >> {
+      "takeR (reversed)" >> {
+        Stream(1, 2, 3, 4, 5).takeR(3).toList.reverse === List(1, 2, 3)
+        Stream(1, 2, 3, 4, 5).takeR(20).toList.reverse === List(1, 2, 3, 4, 5)
+        Stream(1, 2, 3, 4, 5).takeR(0) === Empty
+        Stream().takeR(5) === Empty
+      }
 
-    "take" >> {
-      Stream(1, 2, 3, 4, 5).take(3).toList === List(1, 2, 3)
-      Stream(1, 2, 3, 4, 5).take(20).toList === List(1, 2, 3, 4, 5)
-      Stream(1, 2, 3, 4, 5).take(0) === Empty
-      Stream().take(5) === Empty
+      "take" >> {
+        Stream(1, 2, 3, 4, 5).take(3).toList === List(1, 2, 3)
+        Stream(1, 2, 3, 4, 5).take(20).toList === List(1, 2, 3, 4, 5)
+        Stream(1, 2, 3, 4, 5).take(0) === Empty
+        Stream().take(5) === Empty
+      } 
+    }
+    "using unfold" >> {
+      Stream(1, 2, 3, 4, 5).takeU(3).toList === List(1, 2, 3)
+      Stream(1, 2, 3, 4, 5).takeU(20).toList === List(1, 2, 3, 4, 5)
+      Stream(1, 2, 3, 4, 5).takeU(0) === Empty
+      Stream().takeU(5) === Empty
     }
   }
 
@@ -40,19 +48,28 @@ class StreamSpec extends Specification {
   }
 
   "takeWhile" >> {
-    "using matcher" >> {
-      Stream(1, 2, 3, 4, 5, 6).takeWhileM(_ % 2 == 0) === Empty
-      Stream(1, 2, 3, 4, 5, 6).takeWhileM(_ % 2 != 0).toList === List(1)
-      Stream(2, 4, 6, 1, 2, 8).takeWhileM(_ % 2 == 0).toList === List(2, 4, 6)
-      Stream[Int]().takeWhileM(_ % 2 == 0) === Empty
+    "recursively" >> {
+      "using matcher" >> {
+        Stream(1, 2, 3, 4, 5, 6).takeWhileM(_ % 2 == 0) === Empty
+        Stream(1, 2, 3, 4, 5, 6).takeWhileM(_ % 2 != 0).toList === List(1)
+        Stream(2, 4, 6, 1, 2, 8).takeWhileM(_ % 2 == 0).toList === List(2, 4, 6)
+        Stream[Int]().takeWhileM(_ % 2 == 0) === Empty
+      }
+
+      "using foldRight" >> {
+        Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 == 0) === Empty
+        Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 != 0).toList === List(1)
+        Stream(2, 4, 6, 1, 2, 8).takeWhile(_ % 2 == 0).toList === List(2, 4, 6)
+        Stream[Int]().takeWhile(_ % 2 == 0) === Empty
+      }
+    }
+    "using unfold" >> {
+      Stream(1, 2, 3, 4, 5, 6).takeWhileU(_ % 2 == 0) === Empty
+      Stream(1, 2, 3, 4, 5, 6).takeWhileU(_ % 2 != 0).toList === List(1)
+      Stream(2, 4, 6, 1, 2, 8).takeWhileU(_ % 2 == 0).toList === List(2, 4, 6)
+      Stream[Int]().takeWhileU(_ % 2 == 0) === Empty
     }
 
-    "using foldRight" >> {
-      Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 == 0) === Empty
-      Stream(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 != 0).toList === List(1)
-      Stream(2, 4, 6, 1, 2, 8).takeWhile(_ % 2 == 0).toList === List(2, 4, 6)
-      Stream[Int]().takeWhile(_ % 2 == 0) === Empty
-    }
   }
 
   "exists implemented with foldRight" >> {
@@ -158,6 +175,10 @@ class StreamSpec extends Specification {
       type StreamType = Cons[_]
       Stream.unfold(0)(a => if (a <= 10) Some((a, a + 2)) else None).toList === List(0, 2, 4, 6, 8, 10)
       Stream.unfold(0)(a => Some((a, a + 2))).take(3).toList === List(0, 2, 4)
+    }
+
+    "zipWith" >> {
+      Stream(1, 2, 3).zipWith(Stream(.5, 1.0, 2.0))((a, b) => (a * b).toString).toList === List("0.5", "2.0", "6.0")
     }
 
     "startsWith" >> {
