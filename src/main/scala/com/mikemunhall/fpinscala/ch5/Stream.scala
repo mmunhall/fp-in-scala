@@ -92,6 +92,16 @@ sealed trait Stream[+A] {
 
   def find(f: A => Boolean): Option[A] = filter(f) headOption
 
+  // Exercise 5.13 - 1/4
+  def mapU[B](f: A => B): Stream[B] = Stream.unfold(this) {
+    case Cons(h, t) => Some((f(h()), t()))
+    case _ => None
+  }
+
+
+  // Exercise 5.14
+  def startsWith[A](s: Stream[A]): Boolean = ???
+
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
@@ -108,6 +118,12 @@ object Stream {
   def apply[A](as: A*): Stream[A] =
     if (as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
 
+  // Exercise 5.11
+  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = f(z) match {
+    case Some((a, s)) => cons(a, unfold(s)(f))
+    case None => empty
+  }
+
   val ones: Stream[Int] = Stream.cons(1, ones)
 
   // Exercise 5.8
@@ -120,12 +136,6 @@ object Stream {
   def fibs: Stream[Int] = {
     def go(n: Int, m: Int): Stream[Int] = cons(n, go(n + m, n))
     go(0, 1)
-  }
-
-  // Exercise 5.11
-  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = f(z) match {
-    case Some((a, s)) => cons(a, unfold(s)(f))
-    case None => empty
   }
 
   // Exercise 5.12 - 1/4

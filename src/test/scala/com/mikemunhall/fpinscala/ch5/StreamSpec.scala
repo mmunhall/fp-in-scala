@@ -81,9 +81,16 @@ class StreamSpec extends Specification {
   }
 
   "map" >> {
-    Stream(1, 2, 3).map(_.toDouble).toList === List(1.0, 2.0, 3.0)
-    Stream[Double]().map(_.toString).toList === List[String]()
-    Stream[Double]().map(_.toString) === Empty
+    "using foldRight" >> {
+      Stream(1, 2, 3).map(_.toDouble).toList === List(1.0, 2.0, 3.0)
+      Stream[Double]().map(_.toString).toList === List[String]()
+      Stream[Double]().map(_.toString) === Empty 
+    }
+    "using unfold" >> {
+      Stream(1, 2, 3).mapU(_.toDouble).toList === List(1.0, 2.0, 3.0)
+      Stream[Double]().mapU(_.toString).toList === List[String]()
+      Stream[Double]().mapU(_.toString) === Empty
+    }
   }
 
   "filter" >> {
@@ -152,6 +159,11 @@ class StreamSpec extends Specification {
       Stream.unfold(0)(a => if (a <= 10) Some((a, a + 2)) else None).toList === List(0, 2, 4, 6, 8, 10)
       Stream.unfold(0)(a => Some((a, a + 2))).take(3).toList === List(0, 2, 4)
     }
+
+    "startsWith" >> {
+      Stream(1, 2, 3).startsWith(Stream(1, 2)) === true
+      Stream(1, 2, 3).startsWith(Stream(2)) === false
+    }.pendingUntilFixed
   }
 
 }
