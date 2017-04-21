@@ -211,6 +211,15 @@ class StreamSpec extends Specification {
         Stream(1, 2, 3).tails.toList.map(_ toList) === List(List(1, 2, 3), List(2, 3), List(3), List())
       }
     }
+
+    "hasSubsequence" >> {
+      Stream(1, 2, 3, 4, 5).hasSubsequence(Stream(2, 3)) === true
+      Stream(1, 2, 3, 4, 5).hasSubsequence(Stream()) === true
+      Stream(1, 2, 3, 4, 5).hasSubsequence(Stream(1, 2)) === true
+      Stream(1, 2, 3, 4, 5).hasSubsequence(Stream(5)) === true
+      Stream(1, 2, 3, 4, 5).hasSubsequence(Stream(9)) === false
+      Stream(1, 2, 3, 2, 9, 4, 5).hasSubsequence(Stream(2, 9)) === true
+    }
   }
 
 }
