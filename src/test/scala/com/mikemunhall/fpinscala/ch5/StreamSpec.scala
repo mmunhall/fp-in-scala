@@ -202,6 +202,15 @@ class StreamSpec extends Specification {
         Stream(1, 2, 3).startsWith(Stream(2)) === false
       }
     }
+
+    "tails" >> {
+      "mine" >> {
+        Stream(1, 2, 3).tailsMine.toList.map(_ toList) === List(List(1, 2, 3), List(2, 3), List(3), List())
+      }
+      "theirs" >> {
+        Stream(1, 2, 3).tails.toList.map(_ toList) === List(List(1, 2, 3), List(2, 3), List(3), List())
+      }
+    }
   }
 
 }
