@@ -126,8 +126,15 @@ sealed trait Stream[+A] {
       case _ => None
     }
 
-  // Exercise 5.14
-  def startsWith[A](s: Stream[A]): Boolean = ???
+  // Exercise 5.14 - Mine is not quite as nice as the solution in the companion book
+  def startsWithMine[A](s: Stream[A]): Boolean =
+    this.zipAll(s).takeWhile(g => g._1 equals g._2).toList.size == s.toList.size
+
+  // Exercise 5.14 - Companion book solution
+  def startsWith[A](s: Stream[A]): Boolean =
+    this.zipAll(s).takeWhile(!_._2.isEmpty) forAll {
+      case (l, r) => l == r
+    }
 
 }
 case object Empty extends Stream[Nothing]

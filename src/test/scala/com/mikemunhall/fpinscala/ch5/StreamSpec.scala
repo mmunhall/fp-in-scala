@@ -193,9 +193,15 @@ class StreamSpec extends Specification {
     }
 
     "startsWith" >> {
-      Stream(1, 2, 3).startsWith(Stream(1, 2)) === true
-      Stream(1, 2, 3).startsWith(Stream(2)) === false
-    }.pendingUntilFixed
+      "mine" >> {
+        Stream(1, 2, 3).startsWithMine(Stream(1, 2)) === true
+        Stream(1, 2, 3).startsWithMine(Stream(2)) === false
+      }
+      "companion book" >> {
+        Stream(1, 2, 3).startsWith(Stream(1, 2)) === true
+        Stream(1, 2, 3).startsWith(Stream(2)) === false
+      }
+    }
   }
 
 }

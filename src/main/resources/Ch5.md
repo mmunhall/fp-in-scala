@@ -7,6 +7,7 @@ Chapter 5 Notes
 * lazy keyword delays evaluation until the result is needed, then caches the result so evaluation happens only once.
 * stream ~= lazy list
 * forced == invoked
+* The point of laziness is to separate the description of an expression from its evaluation.
 
 Question for group
 ------------------
