@@ -2,48 +2,64 @@ package com.mikemunhall.fpinscala.ch6
 
 trait RNG {
   def nextInt: (Int, RNG)
+}
 
-  // Exercise 1 - Mine
+object RNG {
+  type Rand[+A] = RNG => (A, RNG)
+
+  def unit[A](a: A): Rand[A] = rng => (a, rng)
+
+  // type Rand[+A] = RNG => (A, RNG)
+
+  // def map[A, B](s: Rand[B])(f: A => B): RNG => (B, RNG) = {
+  def map[A, B](s: Rand[A])(f: A => B): Rand[B] = {
+    rng => {
+      val (a, _) = s(rng)
+      (f(a), rng)
+    }
+  }
+
+  // Exercise 6.1 - Mine
   def nonNegativeIntMine(rng: RNG): (Int, RNG) = rng.nextInt match {
     case (r, nextRng) if r > 0 || r == Int.MinValue => (r, nextRng)
     case (r, nextRng) => nonNegativeInt(nextRng)
   }
 
-  // Exercise 1 - Book
+  // Exercise 6.1 - Book
   def nonNegativeInt(rng: RNG): (Int, RNG) = {
     val (i, r) = rng.nextInt
     (if (i < 0) -(i + 1) else i, r)
   }
 
-  // Exercise 2
-  def double(rng: RNG): (Double, RNG) = {
+  // Exercise 6.2
+  def double1(rng: RNG): (Double, RNG) = {
     val (i, r) = nonNegativeInt(rng)
     (i / (Int.MaxValue.toDouble + 1), r)
   }
 
-  // Exercise 3 - 1/3
+  // Exercise 6.3 - 1/3
   def intDouble(rng: RNG): ((Int, Double), RNG) = {
     val (i, rng1) = nonNegativeInt(rng)
-    val (d, rng2) = double(rng1)
+    val (d, rng2) = double1(rng1)
     ((i, d), rng2)
   }
 
-  // Exercise 3 - 2/3
+  // Exercise 6.3 - 2/3
   def doubleInt(rng: RNG): ((Double, Int), RNG) = {
-    val (d, rng1) = double(rng)
+    val (d, rng1) = double1(rng)
     val (i, rng2) = nonNegativeInt(rng1)
     ((d, i), rng2)
   }
 
-  // Exercise 3 - 3/3
+  // Exercise 6.3 - 3/3
   def double3(rng: RNG): ((Double, Double, Double), RNG) = {
-    val (d1, rng1) = double(rng)
-    val (d2, rng2) = double(rng1)
-    val (d3, rng3) = double(rng2)
+    val (d1, rng1) = double1(rng)
+    val (d2, rng2) = double1(rng1)
+    val (d3, rng3) = double1(rng2)
     ((d1, d2, d3), rng3)
   }
 
-  // Exercise 4
+  // Exercise 6.4
   def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
 
     @annotation.tailrec
@@ -57,6 +73,15 @@ trait RNG {
 
     go(count, Nil, rng)
   }
+
+  def nonNegativeEven: Rand[Int] = map(nonNegativeInt)(i => i - i % 2)
+
+  // Exercise 6.5
+  def double: Rand[Double] =
+    map(nonNegativeInt)(i => i / (Int.MaxValue.toDouble + 1))
+
+  // Exercise 6.6
+  def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = ???
 }
 
 case class SimpleRNG(seed: Long) extends RNG {
