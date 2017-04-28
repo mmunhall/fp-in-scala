@@ -14,6 +14,34 @@ trait RNG {
     val (i, r) = rng.nextInt
     (if (i < 0) -(i + 1) else i, r)
   }
+
+  // Exercise 2
+  def double(rng: RNG): (Double, RNG) = {
+    val (i, r) = nonNegativeInt(rng)
+    (i / (Int.MaxValue.toDouble + 1), r)
+  }
+
+  // Exercise 3 - 1/3
+  def intDouble(rng: RNG): ((Int, Double), RNG) = {
+    val (i, rng1) = nonNegativeInt(rng)
+    val (d, rng2) = double(rng1)
+    ((i, d), rng2)
+  }
+
+  // Exercise 3 - 2/3
+  def doubleInt(rng: RNG): ((Double, Int), RNG) = {
+    val (d, rng1) = double(rng)
+    val (i, rng2) = nonNegativeInt(rng1)
+    ((d, i), rng2)
+  }
+
+  // Exercise 3 - 3/3
+  def double3(rng: RNG): ((Double, Double, Double), RNG) = {
+    val (d1, rng1) = double(rng)
+    val (d2, rng2) = double(rng1)
+    val (d3, rng3) = double(rng2)
+    ((d1, d2, d3), rng3)
+  }
 }
 
 case class SimpleRNG(seed: Long) extends RNG {
