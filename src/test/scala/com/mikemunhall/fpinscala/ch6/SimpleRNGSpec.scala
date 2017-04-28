@@ -77,4 +77,9 @@ class SimpleRNGSpec extends Specification {
     RNG.ints(2)(rng)._1 === List(-549383847, -1151252339)
     RNG.ints(3)(rng)._1 === List(1612966641, -549383847, -1151252339)
   }
+
+  "map2" >> {
+    val rng = SimpleRNG(25214903928l)
+    RNG.map2(RNG.nonNegativeInt, RNG.nonNegativeInt)(_ * _)(rng)._1 === -2077479228
+  }
 }
