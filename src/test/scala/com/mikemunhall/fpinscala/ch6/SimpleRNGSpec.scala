@@ -56,4 +56,12 @@ class SimpleRNGSpec extends Specification {
     result._2 === 0.2558267889544368
     result._3 === 0.7510961224325001
   }
+
+  "ints" >> {
+    val rng = SimpleRNG(25214903928l)
+    rng.ints(0)(rng)._1 === Nil
+    rng.ints(1)(rng)._1 === List(-1151252339)
+    rng.ints(2)(rng)._1 === List(-549383847, -1151252339)
+    rng.ints(3)(rng)._1 === List(1612966641, -549383847, -1151252339)
+  }
 }

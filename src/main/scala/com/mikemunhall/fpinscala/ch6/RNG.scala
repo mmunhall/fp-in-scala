@@ -42,6 +42,21 @@ trait RNG {
     val (d3, rng3) = double(rng2)
     ((d1, d2, d3), rng3)
   }
+
+  // Exercise 4
+  def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
+
+    @annotation.tailrec
+    def go(c: Int, acc: List[Int], rng: RNG): (List[Int], RNG) = {
+      if (c == 0) (acc, rng)
+      else {
+        val (n, rngNext) = rng.nextInt
+        go(c - 1, n :: acc, rngNext)
+      }
+    }
+
+    go(count, Nil, rng)
+  }
 }
 
 case class SimpleRNG(seed: Long) extends RNG {
