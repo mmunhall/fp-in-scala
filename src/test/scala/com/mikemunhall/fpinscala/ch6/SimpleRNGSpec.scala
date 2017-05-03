@@ -71,15 +71,29 @@ class SimpleRNGSpec extends Specification {
   }
 
   "ints" >> {
-    val rng = SimpleRNG(25214903928l)
-    RNG.ints(0)(rng)._1 === Nil
-    RNG.ints(1)(rng)._1 === List(-1151252339)
-    RNG.ints(2)(rng)._1 === List(-549383847, -1151252339)
-    RNG.ints(3)(rng)._1 === List(1612966641, -549383847, -1151252339)
+    "recursively" >> {
+      val rng = SimpleRNG(25214903928l)
+      RNG.intsR(0)(rng)._1 === Nil
+      RNG.intsR(1)(rng)._1 === List(-1151252339)
+      RNG.intsR(2)(rng)._1 === List(-549383847, -1151252339)
+      RNG.intsR(3)(rng)._1 === List(1612966641, -549383847, -1151252339)
+    }
+    "using sequence" >> {
+      val rng = SimpleRNG(25214903928l)
+      RNG.ints(0)(rng)._1 === Nil
+      RNG.ints(1)(rng)._1 === List(-1151252339)
+      RNG.ints(2)(rng)._1 === List(-1151252339, -549383847)
+      RNG.ints(3)(rng)._1 === List(-1151252339, -549383847, 1612966641)
+    }
   }
 
   "map2" >> {
     val rng = SimpleRNG(25214903928l)
-    RNG.map2(RNG.nonNegativeInt, RNG.nonNegativeInt)(_ * _)(rng)._1 === -2077479228
+    RNG.map2(RNG.nonNegativeInt, RNG.nonNegativeInt)(_ * _)(rng)._1 === 1947398124
+  }
+
+  "sequence" >> {
+    val rng = SimpleRNG(25214903928l)
+    RNG.sequence(List(RNG.unit(1), RNG.unit(2), RNG.unit(3)))(rng)._1 === List(1, 2, 3)
   }
 }

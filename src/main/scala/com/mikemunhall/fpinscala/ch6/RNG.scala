@@ -49,8 +49,8 @@ object RNG {
     ((d1, d2, d3), rng3)
   }
 
-  // Exercise 6.4
-  def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
+  // Exercise 6.4 - Recursively
+  def intsR(count: Int)(rng: RNG): (List[Int], RNG) = {
 
     @annotation.tailrec
     def go(c: Int, acc: List[Int], rng: RNG): (List[Int], RNG) = {
@@ -77,17 +77,47 @@ object RNG {
   }
 
   // Exercise 6.5
-  def double: Rand[Double] =
+  val double: Rand[Double] =
     map(nonNegativeInt)(i => i / (Int.MaxValue.toDouble + 1))
 
   // Exercise 6.6
   def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = {
     rng => {
       val (rav, rar) = ra(rng)
-      val (rbv, rbr) = rb(rng)
-      (f(rav, rbv), rng)
+      val (rbv, rbr) = rb(rar)
+      (f(rav, rbv), rbr)
     }
   }
+
+  def map4[A, B, C, D, E](ra: Rand[A], rb: Rand[B], rc: Rand[C], rd: Rand[D])(f: (A, B, C, D) => E): Rand[E] = {
+    rng => {
+      val (rav, rar) = ra(rng)
+      val (rbv, rbr) = rb(rng)
+      val (rcv, rcr) = rc(rng)
+      val (rdv, rdr) = rd(rng)
+      (f(rav, rbv, rcv, rdv), rng)
+    }
+  }
+
+  def both[A, B](ra: Rand[A], rb: Rand[B]): Rand[(A, B)] =
+    map2(ra, rb)((_, _))
+
+  val int: Rand[Int] = _.nextInt
+
+  val randIntDouble: Rand[(Int, Double)] = both(int, double)
+
+  val randDoubleInt: Rand[(Double, Int)] = both(double, int)
+
+  // Exercise 6.7 - 1/2
+  // def sequence[A](fs: List[RNG => (A, RNG)]): RNG => (List[A], RNG)
+  def sequence[A](fs: List[Rand[A]]): Rand[List[A]] =
+    fs.foldRight(unit(List[A]())) { (a, acc) =>
+      map2(a, acc)(_ :: _)
+    }
+
+  // Exercise 6.7 - 2/2
+  def ints(count: Int): Rand[List[Int]] =
+    sequence(List.fill(count)(int))
 }
 
 case class SimpleRNG(seed: Long) extends RNG {
