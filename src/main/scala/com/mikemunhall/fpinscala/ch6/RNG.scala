@@ -66,9 +66,6 @@ object RNG {
 
   def nonNegativeEven: Rand[Int] = map(nonNegativeInt)(i => i - i % 2)
 
-  // type Rand[+A] = RNG => (A, RNG)
-
-  // def map[A, B](s: Rand[B])(f: A => B): RNG => (B, RNG) = {
   def map[A, B](s: Rand[A])(f: A => B): Rand[B] = {
     rng => {
       val (a, _) = s(rng)
@@ -118,6 +115,24 @@ object RNG {
   // Exercise 6.7 - 2/2
   def ints(count: Int): Rand[List[Int]] =
     sequence(List.fill(count)(int))
+
+  def nonNegativeLessThanR(n: Int): Rand[Int] = { rng =>
+    val (i, rng2) = nonNegativeInt(rng)
+    val mod = i % n
+    if (i + (n - 1) - mod >= 0) (mod, rng2) else nonNegativeLessThan(n)(rng)
+  }
+
+  // Exercise 6.8 - 1/2
+  def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = { rng =>
+    val (i, rng2) = f(rng)
+    g(i)(rng2)
+  }
+
+  // Exercise 6.8 2/2
+  def nonNegativeLessThan(n: Int): Rand[Int] = flatMap(nonNegativeInt) { a =>
+    val mod = a % n
+    if (a + (n - 1) - mod >= 0) unit(mod) else nonNegativeLessThan(n)
+  }
 }
 
 case class SimpleRNG(seed: Long) extends RNG {

@@ -96,4 +96,14 @@ class SimpleRNGSpec extends Specification {
     val rng = SimpleRNG(25214903928l)
     RNG.sequence(List(RNG.unit(1), RNG.unit(2), RNG.unit(3)))(rng)._1 === List(1, 2, 3)
   }
+
+  "nonNegativeLessThan" >> {
+    val rng = SimpleRNG(25214903928l)
+    "recursively" >> {
+      RNG.nonNegativeLessThanR(15000)(rng)._1 === 2338
+    }
+    "using flatMap" >> {
+      RNG.nonNegativeLessThan(15000)(rng)._1 === 2338
+    }
+  }
 }
