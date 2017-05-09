@@ -78,7 +78,7 @@ object RNG {
     map(nonNegativeInt)(i => i / (Int.MaxValue.toDouble + 1))
 
   // Exercise 6.6
-  def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = {
+  def _map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = {
     rng => {
       val (rav, rar) = ra(rng)
       val (rbv, rbr) = rb(rar)
@@ -137,6 +137,15 @@ object RNG {
   // Exercise 6.9 - 1/2
   def map[A, B](s: Rand[A])(f: A => B): Rand[B] = flatMap(s) { a =>
     unit(f(a))
+  }
+
+  // Exercise 6.9 - 2/2
+  def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = {
+    flatMap(ra) { a =>
+      map(rb) { b =>
+        f(a, b)
+      }
+    }
   }
 }
 

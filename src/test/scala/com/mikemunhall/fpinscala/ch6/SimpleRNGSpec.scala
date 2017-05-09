@@ -89,7 +89,7 @@ class SimpleRNGSpec extends Specification {
 
   "map2" >> {
     val rng = SimpleRNG(25214903928l)
-    RNG.map2(RNG.nonNegativeInt, RNG.nonNegativeInt)(_ * _)(rng)._1 === 1947398124
+    RNG._map2(RNG.nonNegativeInt, RNG.nonNegativeInt)(_ * _)(rng)._1 === 1947398124
   }
 
   "sequence" >> {
