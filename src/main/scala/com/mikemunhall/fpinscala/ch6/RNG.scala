@@ -5,7 +5,8 @@ trait RNG {
 }
 
 object RNG {
-  type Rand[+A] = RNG => (A, RNG)
+  type Rand[A] = State[RNG, A]
+  type State[S, +A] = S => (A, S)
 
   def unit[A](a: A): Rand[A] = rng => (a, rng)
 
