@@ -1,7 +1,6 @@
 package com.mikemunhall.fpinscala.ch7
 
 import java.util.concurrent.{Callable, ExecutorService, Future}
-
 import scala.concurrent.duration.TimeUnit
 
 object Par {
@@ -29,9 +28,19 @@ object Par {
 
   def run[A](s: ExecutorService)(a: Par[A]): Future[A] = a(s)
 
+  def map[A, B](par: Par[A])(f: A => B): Par[B] = map2(par, unit(()))((a, _) => f(a))
+
   def parSort(par: Par[List[Int]]): Par[List[Int]] = map(par)(_.sorted)
 
-  def map[A, B](par: Par[A])(f: A => B): Par[B] = map2(par, unit(()))((a, _) => f(a))
+  def parMap[A, B](ps: List[A])(f: A => B): Par[List[B]] = fork {
+    val fbs: List[Par[B]] = ps.map(asyncF(f))
+    sequence(fbs)
+  }
+
+  // Exercise 7.5
+  def sequence[A](ps: List[Par[A]]): Par[List[A]] = {
+    ps.foldRight(unit(List[A]()))((a, acc) => map2(a, acc)(_ :: _))
+  }
 
   private case class UnitFuture[A](get: A) extends Future[A] {
     def isDone = true
