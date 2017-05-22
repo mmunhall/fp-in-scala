@@ -35,6 +35,7 @@ class ParSpec extends Specification {
     Par.equals(S)(a, Par.fork(a)) === true
   }
 
+  // Exercise 7.9
   "fork deadlocks with two threads" >> {
     skipped("Creates a deadlock")
     val a = Par.lazyUnit(42 + 1)
