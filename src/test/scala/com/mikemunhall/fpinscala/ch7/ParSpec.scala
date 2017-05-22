@@ -22,6 +22,7 @@ class ParSpec extends Specification {
     Par.equals(Executors.newFixedThreadPool(2))(par1, par3) === true
   }
 
+  // Begin Exercise 7.9
   "fork deadlocks with one thread" >> {
     skipped("Creates a deadlock")
     val a = Par.lazyUnit(42 + 1)
@@ -35,11 +36,12 @@ class ParSpec extends Specification {
     Par.equals(S)(a, Par.fork(a)) === true
   }
 
-  // Exercise 7.9
   "fork deadlocks with two threads" >> {
     skipped("Creates a deadlock")
     val a = Par.lazyUnit(42 + 1)
     val S = Executors.newFixedThreadPool(1)
     Par.equals(S)(a, Par.fork(Par.fork(a))) === true
   }
+  // End Exercise 7.9
+
 }
