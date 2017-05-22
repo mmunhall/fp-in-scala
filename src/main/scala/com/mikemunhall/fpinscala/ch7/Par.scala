@@ -7,8 +7,14 @@ object Par {
 
   type Par[A] = ExecutorService => Future[A]
 
+  /**
+    * promotes a constant value to a parallel computation.
+    */
   def unit[A](a: A): Par[A] = (es: ExecutorService) => UnitFuture(a)
 
+  /**
+    * combines the results of two parallel computations with a binary function.
+    */
   def map2[A, B, C](par1: Par[A], par2: Par[B])(f: (A, B) => C): Par[C] =
     (es: ExecutorService) => {
       val af = par1(es)
@@ -16,17 +22,29 @@ object Par {
       UnitFuture(f(af.get, bf.get))
     }
 
-  def lazyUnit[A](a: => A): Par[A] = fork(unit(a))
-
-  // Exercise 7.4
-  def asyncF[A, B](f: A => B): A => Par[B] = a => lazyUnit(f(a))
-
+  /**
+    * marks a computation for concurrent evaluation. The evaluation won’t actually occur until forced by run.
+    */
   def fork[A](a: => Par[A]): Par[A] =
     es => es.submit(new Callable[A] {
       def call() = a(es).get
     })
 
+  /**
+    * wraps its unevaluated argument in a Par and marks it for concurrent evaluation.
+    */
+  def lazyUnit[A](a: => A): Par[A] = fork(unit(a))
+
+  /**
+    * extracts a value from a Par by actually performing the computation.
+    */
   def run[A](s: ExecutorService)(a: Par[A]): Future[A] = a(s)
+
+  // Exercise 7.4
+  /**
+    * convert any function A => B to one that evaluates its result asynchronously
+    */
+  def asyncF[A, B](f: A => B): A => Par[B] = a => lazyUnit(f(a))
 
   def map[A, B](par: Par[A])(f: A => B): Par[B] = map2(par, unit(()))((a, _) => f(a))
 
@@ -44,11 +62,15 @@ object Par {
 
   // Exercise 7.6 (This may not be right.)
   def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] =
-    as.foldRight(lazyUnit(List[A]()))((a, acc) => if (f(a)) map2(lazyUnit(a), acc)(_ :: _) else acc)
+    as.foldRight(unit(List[A]()))((a, acc) => if (f(a)) map2(unit(a), acc)(_ :: _) else acc)
 
-  private case class UnitFuture[A](get: A) extends Future[A] {
+  def equals[A](es: ExecutorService)(par1: Par[A], par2: Par[A]): Boolean =
+    par1(es).get == par2(es).get
+
+  private case class UnitFuture[A](a: A) extends Future[A] {
     def isDone = true
     def isCancelled = false
+    def get = a
     def get(timeout: Long, unit: TimeUnit) = get
     def cancel(myInterruptIfRunning: Boolean) = false
   }
