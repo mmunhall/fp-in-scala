@@ -42,6 +42,10 @@ object Par {
     ps.foldRight(unit(List[A]()))((a, acc) => map2(a, acc)(_ :: _))
   }
 
+  // Exercise 7.6 (This may not be right.)
+  def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] =
+    as.foldRight(lazyUnit(List[A]()))((a, acc) => if (f(a)) map2(lazyUnit(a), acc)(_ :: _) else acc)
+
   private case class UnitFuture[A](get: A) extends Future[A] {
     def isDone = true
     def isCancelled = false
