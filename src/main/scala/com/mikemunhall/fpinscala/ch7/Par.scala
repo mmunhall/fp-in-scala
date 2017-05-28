@@ -67,6 +67,8 @@ object Par {
   def equals[A](es: ExecutorService)(par1: Par[A], par2: Par[A]): Boolean =
     par1(es).get == par2(es).get
 
+  def delay[A](fa: => Par[A]): Par[A] = es => fa(es)
+
   private case class UnitFuture[A](a: A) extends Future[A] {
     def isDone = true
     def isCancelled = false
