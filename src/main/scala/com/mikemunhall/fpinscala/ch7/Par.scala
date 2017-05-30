@@ -68,6 +68,15 @@ object Par {
     par1(es).get == par2(es).get
 
   def delay[A](fa: => Par[A]): Par[A] = es => fa(es)
+  
+  // Exercsise 7.11 - 1/2
+  def choiceN[A](n: Par[Int])(choices: List[Par[A]]): Par[A] =
+    es => run(es)(choices(run(es)(n).get))
+    
+  // Exercise 7.11 - 2/2
+  def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] = {
+    choiceN(map(cond)(c => if (c) 0 else 1))(List(t, f))
+  }
 
   private case class UnitFuture[A](a: A) extends Future[A] {
     def isDone = true
@@ -78,3 +87,4 @@ object Par {
   }
 
 }
+
