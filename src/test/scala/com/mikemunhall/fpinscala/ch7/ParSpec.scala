@@ -89,7 +89,7 @@ class ParSpec extends Specification {
     Par.choiceMap(parK)(choices)(es).get === "Yes"
   }
 
-  "chooser" >> {
+  "chooser aka flatMap" >> {
     val parK = Par.unit(22)
     def choices(a: Int) = a match {
       case n if n <= 0 => Par.unit("LTE 0")

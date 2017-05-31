@@ -95,6 +95,17 @@ object Par {
   def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] =
     flatMap(cond)(if (_) t else f)
 
+  // Exercise 7.14 - 1/3
+  def join[A](a: Par[Par[A]]): Par[A] = es => run(es)(run(es)(a).get())
+
+  // Exercise 7.14 - 2/3
+  def flatMapViaJoin[A, B](pa: Par[A])(choices: A => Par[B]): Par[B] =
+    join(map(pa)(choices))
+
+  // Exercise 7.14 - 3/3
+  def joinViaFlatMap[A](a: Par[Par[A]]): Par[A] =
+    flatMap(a)(a => a)
+
   private case class UnitFuture[A](a: A) extends Future[A] {
     def isDone = true
     def isCancelled = false
@@ -102,6 +113,5 @@ object Par {
     def get(timeout: Long, unit: TimeUnit) = get
     def cancel(myInterruptIfRunning: Boolean) = false
   }
-
 }
 
