@@ -45,20 +45,57 @@ class ParSpec extends Specification {
   // End Exercise 7.9
 
   "choice" >> {
-    val par1 = Par.unit(1)
-    val par2 = Par.unit(2)
-    val es = Executors.newFixedThreadPool(2)
-    Par.choice(Par.unit(true))(par1, par2)(es).get === 1
-    Par.choice(Par.unit(false))(par1, par2)(es).get === 2
+    "less general version" >> {
+      val par1 = Par.unit(1)
+      val par2 = Par.unit(2)
+      val es = Executors.newFixedThreadPool(2)
+      Par._choice(Par.unit(true))(par1, par2)(es).get === 1
+      Par._choice(Par.unit(false))(par1, par2)(es).get === 2
+    }
+    /*"more general version" >> {
+      val par1 = Par.unit(1)
+      val par2 = Par.unit(2)
+      val es = Executors.newFixedThreadPool(2)
+      Par.choice(Par.unit(true))(par1, par2)(es).get === 1
+      Par.choice(Par.unit(false))(par1, par2)(es).get === 2
+    }*/
   }
 
   "choiceN" >> {
-    val par0 = Par.unit(0)
-    val par1 = Par.unit(1)
-    val par2 = Par.unit(2)
+    "less general version" >> {
+      val par0 = Par.unit(0)
+      val par1 = Par.unit(1)
+      val par2 = Par.unit(2)
+      val es = Executors.newFixedThreadPool(2)
+      Par._choiceN(par0)(List(par0, par1, par2))(es).get === 0
+      Par._choiceN(par1)(List(par0, par1, par2))(es).get === 1
+      Par._choiceN(par2)(List(par0, par1, par2))(es).get === 2
+    }
+    "more general version" >> {
+      val par0 = Par.unit(0)
+      val par1 = Par.unit(1)
+      val par2 = Par.unit(2)
+      val es = Executors.newFixedThreadPool(2)
+      Par.choiceN(par0)(List(par0, par1, par2))(es).get === 0
+      Par.choiceN(par1)(List(par0, par1, par2))(es).get === 1
+      Par.choiceN(par2)(List(par0, par1, par2))(es).get === 2
+    }
+  }
+
+  "choiceMap" >> {
+    val parK = Par.unit(22)
+    val choices = Map(0 -> Par.unit("No"), 22 -> Par.unit("Yes"))
     val es = Executors.newFixedThreadPool(2)
-    Par.choiceN(par0)(List(par0, par1, par2))(es).get === 0
-    Par.choiceN(par1)(List(par0, par1, par2))(es).get === 1
-    Par.choiceN(par2)(List(par0, par1, par2))(es).get === 2
+    Par.choiceMap(parK)(choices)(es).get === "Yes"
+  }
+
+  "chooser" >> {
+    val parK = Par.unit(22)
+    def choices(a: Int) = a match {
+      case n if n <= 0 => Par.unit("LTE 0")
+      case _ => Par.unit("GT 0")
+    }
+    val es = Executors.newFixedThreadPool(2)
+    Par.flatMap(parK)(choices)(es).get === "GT 0"
   }
 }

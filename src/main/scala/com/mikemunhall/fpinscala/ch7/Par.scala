@@ -68,15 +68,32 @@ object Par {
     par1(es).get == par2(es).get
 
   def delay[A](fa: => Par[A]): Par[A] = es => fa(es)
-  
+
   // Exercsise 7.11 - 1/2
-  def choiceN[A](n: Par[Int])(choices: List[Par[A]]): Par[A] =
+  def _choiceN[A](n: Par[Int])(choices: List[Par[A]]): Par[A] =
     es => run(es)(choices(run(es)(n).get))
-    
+
   // Exercise 7.11 - 2/2
-  def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] = {
-    choiceN(map(cond)(c => if (c) 0 else 1))(List(t, f))
+  def _choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] = {
+    _choiceN(map(cond)(c => if (c) 0 else 1))(List(t, f))
   }
+
+  // Exercise 7.12
+  def choiceMap[K, V](key: Par[K])(choices: Map[K, Par[V]]): Par[V] =
+    es => run(es)(choices(run(es)(key).get))
+
+  // Exercise 7.13 - 1/3
+  // def chooser[A, B](pa: Par[A])(choices: A => Par[B]): Par[B] =
+  def flatMap[A, B](pa: Par[A])(choices: A => Par[B]): Par[B] =
+    es => run(es)(choices(run(es)(pa).get))
+
+  // Exercise 7.13 - 2/3
+  def choiceN[A](n: Par[Int])(choices: List[Par[A]]): Par[A] =
+    flatMap(n)(choices(_))
+
+  // Exercise 7.13 - 3/3
+  def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] =
+    flatMap(cond)(if (_) t else f)
 
   private case class UnitFuture[A](a: A) extends Future[A] {
     def isDone = true
