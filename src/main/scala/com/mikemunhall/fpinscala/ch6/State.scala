@@ -1,12 +1,12 @@
 package com.mikemunhall.fpinscala.ch6
 
 // Exercise 6.10
-case class State[S, +A](run: S => (S, A)) {
+case class State[S, +A](run: S => (A, S)) {
 
   import State._
 
   def flatMap[B](f: A => State[S, B]): State[S, B] = State(s => {
-    val (s1, a) = run(s)
+    val (a, s1) = run(s)
     f(a).run(s1)
   })
 
@@ -17,7 +17,7 @@ case class State[S, +A](run: S => (S, A)) {
 }
 
 object State {
-  def unit[S, A](a: A): State[S, A] = State(s => (s, a))
+  def unit[S, A](a: A): State[S, A] = State(s => (a, s))
 
   def sequence[S, A](fs: List[State[S, A]]): State[S, List[A]] =
     fs.foldRight(unit[S, List[A]](List[A]())) { (a, acc) =>
