@@ -126,6 +126,9 @@ sealed trait Stream[+A] {
       case _ => None
     }
 
+  def zip[B](s2: Stream[B]): Stream[(A,B)] =
+    zipWith(s2)((_,_))
+
   // Exercise 5.14 - Mine is not quite as nice as the solution in the companion book
   def startsWithMine[A](s: Stream[A]): Boolean =
     this.zipAll(s).takeWhile(g => g._1 equals g._2).toList.size == s.toList.size
