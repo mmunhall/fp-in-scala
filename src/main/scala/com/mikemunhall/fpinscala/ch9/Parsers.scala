@@ -1,4 +1,4 @@
-package com.mikemunhall.fpinscala
+package com.mikemunhall.fpinscala.ch9
 
 import scala.language.higherKinds
 
