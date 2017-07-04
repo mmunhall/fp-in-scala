@@ -1,12 +1,11 @@
-package com.mikemunhall.fpinscala.ch9
+package com.mikemunhall.fpinscala.ch10
 
-object Scratch {
+trait Monoid[A] {
+  def op(a1: A, a2: A): A
+  def zero: A
+}
 
-  trait Monoid[A] {
-    def op(a1: A, a2: A): A
-    def zero: A
-  }
-
+object Monoids {
   val stringMonoid = new Monoid[String] {
     def op(a1: String, a2: String) = a1 + a2
     def zero = ""
