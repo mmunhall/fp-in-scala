@@ -41,9 +41,9 @@ object Scratch {
     def zero = false
   }
 
-  //
+  // Exercise 10.2
   def optionMonoid[A] = new Monoid[Option[A]] {
-    def op(a1: Option[A], a2: Option[A]): Option[A] = a1
-    def zero = ???
+    def op(a1: Option[A], a2: Option[A]): Option[A] = a1 orElse a2
+    def zero = None
   }
 }
