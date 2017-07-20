@@ -60,4 +60,12 @@ object Monoids {
   // Exercise 10.5
   def foldMap[A, B](as: List[A], m: Monoid[B])(f: A => B): B =
     as.foldLeft(m.zero)((acc, b) => m.op(acc, f(b)))
+
+  // Exercise 10.6 - 1/2
+  def foldRightUsingFoldMap[A, B](as: List[A])(z: B)(f: (A, B) => B): B =
+    foldMap(as, endoMonoid[B])(f.curried)(z)
+
+  // Exercise 10.6 - 2/2
+  def foldLeftUsingFoldMap[A, B](as: List[A])(z: B)(f: (B, A) => B): B =
+    foldMap(as, dual(endoMonoid[B]))(a => b => f(b, a))(z)
 }
