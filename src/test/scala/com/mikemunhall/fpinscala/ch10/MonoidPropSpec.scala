@@ -4,7 +4,7 @@ import org.scalacheck.{Arbitrary, Properties}
 import org.scalacheck.Prop.forAll
 
 // Exercise 10.5
-object MonoidSpec extends Properties("Monoid Laws") {
+object MonoidPropSpec extends Properties("Monoid Laws") {
 
   property("monoid laws") = {
     propCheck(Monoids.stringMonoid)

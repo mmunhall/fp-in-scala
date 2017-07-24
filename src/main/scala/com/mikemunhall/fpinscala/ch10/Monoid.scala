@@ -68,4 +68,13 @@ object Monoids {
   // Exercise 10.6 - 2/2
   def foldLeftUsingFoldMap[A, B](as: List[A])(z: B)(f: (B, A) => B): B =
     foldMap(as, dual(endoMonoid[B]))(a => b => f(b, a))(z)
+
+  // Exercise 10.7
+  def foldMapV[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): B = v match {
+    case _ if v.isEmpty => m.zero
+    case item if v.length == 1 => m.op(f(item(0)), m.zero);
+    case _ =>
+      val (left, right) = v.splitAt(v.length / 2)
+      m.op(foldMapV(left, m)(f), foldMapV(right, m)(f))
+  }
 }
