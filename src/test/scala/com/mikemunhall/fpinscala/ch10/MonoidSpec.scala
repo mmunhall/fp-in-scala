@@ -11,4 +11,11 @@ class MonoidSpec extends Specification {
     Monoids.foldMapV(IndexedSeq("a", "b", "c", "d"), Monoids.stringMonoid)(a => a) === "abcd"
   }
 
+  "isOrdered" >> {
+    Monoids.isOrdered(IndexedSeq(0, 1, 2)) === true
+    Monoids.isOrdered(IndexedSeq(0, 1, 2, 1)) === false
+    Monoids.isOrdered(IndexedSeq(0, 1, 2, 1, 2)) === false
+    Monoids.isOrdered(IndexedSeq(0)) === true
+  }
+
 }

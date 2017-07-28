@@ -77,4 +77,25 @@ object Monoids {
       val (left, right) = v.splitAt(v.length / 2)
       m.op(foldMapV(left, m)(f), foldMapV(right, m)(f))
   }
+
+  // Exercise 10.9
+  type IntSegment = Option[(Int, Int, Boolean)]
+
+  def intOrderedSegmentMonoid = new Monoid[IntSegment] {
+    def op(a: IntSegment, b: IntSegment) = (a, b) match {
+      case (Some((aStart, aEnd, aIsOrdered)), Some((bStart, bEnd, bIsOrdered))) =>
+        Some(aStart min bStart, aEnd min bEnd, aIsOrdered && bIsOrdered && aEnd <= bStart)
+      case (Some(seg), None) => Some(seg)
+      case (None, Some(seg)) => Some(seg)
+      case (None, None) => None
+    }
+    def zero = None
+  }
+
+  def isOrdered(v: IndexedSeq[Int]): Boolean =
+    foldMapV(v, intOrderedSegmentMonoid)(a => Some((a, a, true))).forall(_._3)
+  // End Exercise 10.9
+
+
+
 }
