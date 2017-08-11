@@ -16,7 +16,7 @@ object Monoids {
     def zero = Nil
   }
 
-  // Exercise 10.1 = 2/4
+  // Exercise 10.1 = 1/4
   val intAddition: Monoid[Int] = new Monoid[Int] {
     def op(a1: Int, a2: Int): Int = a1 + a2
     def zero = 0
