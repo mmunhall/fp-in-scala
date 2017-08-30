@@ -30,10 +30,24 @@ trait Monad[F[_]] extends Functor[F] {
 
 object Monad {
 
+  import com.mikemunhall.fpinscala.ch3.List
   import com.mikemunhall.fpinscala.ch8.Gen
+  import com.mikemunhall.fpinscala.ch4.{Option, Some, None}
 
   val genMonad = new Monad[Gen] {
     def unit[A](a: => A): Gen[A] = Gen.unit(a)
     def flatMap[A, B](ma: Gen[A])(f: A => Gen[B]): Gen[B] = ma flatMap f
+  }
+
+  // Exercise 11.1 - 1/1
+  val listMonad = new Monad[List] {
+    def unit[A](a: => A): List[A] = List.apply(a)
+    def flatMap[A, B](ma: List[A])(f: A => List[B]): List[B] = List.flatMap(ma)(f)
+  }
+
+  // Exercise 11.1 - 1/1
+  val optionMonad = new Monad[Option] {
+    def unit[A](a: => A): Option[A] = Some(a)
+    def flatMap[A, B](ma: Option[A])(f: A => Option[B]): Option[B] = ma flatMap f
   }
 }
