@@ -20,4 +20,29 @@ object RecursiveFunctionsSpec extends Specification {
     }
   }
 
+  "isSorted" >> {
+    "reterns true if elements are sorted" >> {
+      import RecursiveFunctions.isSorted
+
+      isSorted[Int](Array(1, 2, 3, 4, 5), _ <= _)
+      isSorted[Int](Array(1), _ <= _)
+      isSorted[Int](Array(), _ <= _)
+      isSorted[String](Array("a", "b", "c"), _.compare(_) <= 0)
+      isSorted[String](Array("aa", "ab", "ac"), _.compare(_) <= 0)
+      isSorted[Int](Array(1, 1, 1), _ <= _)
+      isSorted[Char](Array('a', 'a', 'a'), _ <= _)
+    }
+  }
+
+  "isSorted" >> {
+    "returns false if elements are sorted" >> {
+      import RecursiveFunctions.isSorted
+
+      isSorted[Int](Array(1, 2, 3, 4, 1), _ < _) === false
+      isSorted[Int](Array(3, 2, 3, 4, 5), _ < _) === false
+      isSorted[String](Array("c", "b", "c"), _.compare(_) < 0) === false
+      isSorted[String](Array("ac", "ab", "ac"), _.compare(_) < 0) === false
+    }
+  }
+
 }
